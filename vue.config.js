@@ -22,7 +22,7 @@ module.exports = {
       },
     },
     host: '0.0.0.0',
-    port: 8090,
+    port: 3000,
     https: false,
     open: false,
   },

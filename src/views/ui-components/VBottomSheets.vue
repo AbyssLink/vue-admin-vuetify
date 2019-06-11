@@ -10,26 +10,9 @@
 </template>
 
  <script>
-import axios from "axios";
 import Vue from "vue";
 import Snackbar from "../../components/snackbar/index";
 
-axios.defaults.withCredentials = true;
-axios.defaults.headers.post["Content-Type"] =
-  "application/x-www-form-urlencoded";
-axios.defaults.headers.get["Content-Type"] =
-  "application/x-www-form-urlencoded";
-axios.defaults.transformRequest = [
-  function(data) {
-    let ret = "";
-    for (let it in data) {
-      ret += encodeURIComponent(it) + "=" + encodeURIComponent(data[it]) + "&";
-    }
-    return ret;
-  }
-];
-//然后再修改原型链
-Vue.prototype.$http = axios;
 export default {
   data() {
     return {
@@ -52,18 +35,6 @@ export default {
         { text: "age", value: "age" }
       ],
       users: [],
-      icons: {
-        1: "email",
-        2: "phone",
-        3: "forum",
-        4: "help",
-        5: "share"
-      },
-      commonRules: [v => !!v || "This is required"],
-      y: "top",
-      x: null,
-      mode: "",
-      timeout: 6000
     };
   },
   created: () => {},
@@ -72,7 +43,7 @@ export default {
       window.location.href = page + ".html";
     },
     getItemList() {
-      this.$http
+      Vue.prototype.$http
         .get("http://localhost:8088/user/list")
         .then(response => {
           if (response.data.status == "success") {

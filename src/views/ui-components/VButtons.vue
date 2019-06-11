@@ -16,26 +16,9 @@
 </template>
 
 <script>
-import axios from "axios";
 import Vue from "vue";
 import Snackbar from "../../components/snackbar/index";
 
-axios.defaults.withCredentials = true;
-axios.defaults.headers.post["Content-Type"] =
-  "application/x-www-form-urlencoded";
-axios.defaults.headers.get["Content-Type"] =
-  "application/x-www-form-urlencoded";
-axios.defaults.transformRequest = [
-  function(data) {
-    let ret = "";
-    for (let it in data) {
-      ret += encodeURIComponent(it) + "=" + encodeURIComponent(data[it]) + "&";
-    }
-    return ret;
-  }
-];
-//然后再修改原型链
-Vue.prototype.$http = axios;
 export default {
   data() {
     return {
@@ -47,27 +30,12 @@ export default {
         price: "",
         imgUrl: "",
         stock: ""
-      },
-      icons: {
-        1: "email",
-        2: "phone",
-        3: "forum",
-        4: "help",
-        5: "share"
-      },
-      commonRules: [v => !!v || "This is required"],
-      y: "top",
-      x: null,
-      mode: "",
-      timeout: 6000
+      }
     };
   },
   methods: {
-    switchPage(page) {
-      window.location.href = page + ".html";
-    },
     createItem() {
-      this.$http
+      Vue.prototype.$http
         .post("http://localhost:8088/item/create", this.itemInfo)
         .then(response => {
           if (response.data.status == "success") {

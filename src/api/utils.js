@@ -1,7 +1,23 @@
 import Vue from 'vue';
 import Axios from 'axios';
 
-Vue.prototype.$http = Axios;
+Axios.defaults.withCredentials = true; //! 跨域带cookies
+Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+Axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
+Axios.defaults.transformRequest = [
+  // eslint-disable-next-line func-names
+  function (data) {
+    let ret = '';
+    // eslint-disable-next-line guard-for-in
+    for (const it in data) {
+      ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&';
+    }
+    return ret;
+  }
+];
+
+Vue.prototype.$http = Axios; // 再修改原型链
+
 
 const service = Vue.prototype.$http.create({
   headers: {
