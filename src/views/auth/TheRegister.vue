@@ -26,6 +26,24 @@
                     type="text"
                   ></v-text-field>
                   <v-text-field
+                    v-model="userInfo.otpCode"
+                    prepend-icon="lock"
+                    name="otpCode"
+                    :rules="commonRules"
+                    label="otpCode"
+                    id="otpCode"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.name"
+                    prepend-icon="lock"
+                    name="name"
+                    :rules="commonRules"
+                    label="name"
+                    id="name"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
                     v-model="userInfo.password"
                     prepend-icon="lock"
                     name="password"
@@ -34,12 +52,30 @@
                     id="password"
                     type="password"
                   ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.gender"
+                    prepend-icon="lock"
+                    name="gender"
+                    :rules="commonRules"
+                    label="gender"
+                    id="gender"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.age"
+                    prepend-icon="lock"
+                    name="age"
+                    :rules="commonRules"
+                    label="age"
+                    id="age"
+                    type="text"
+                  ></v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="red" class="white--text" @click="register">Register</v-btn>
-                <v-btn color="primary" @click="login">Login</v-btn>
+                <v-btn color="warning" class="white--text" @click="getOtp">获取验证码</v-btn>
+                <v-btn color="primary" @click="register">注册</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -75,11 +111,11 @@ export default {
       message: "",
       userInfo: {
         telephone: "",
-        password: ""
-      },
-      form: {
-        username: "admin",
-        password: "admin123"
+        otpCode: "",
+        name: "",
+        password: "",
+        age: "",
+        gender: ""
       },
       icons: {
         1: "email",
@@ -89,60 +125,56 @@ export default {
         5: "share"
       },
       commonRules: [v => !!v || "This is required"],
-      currentYear: new Date().getFullYear(),
-      showPwd: false,
-      loginLoading: false,
-      source: "https://github.com/ShiroCheng/spikeproject"
+      y: "top",
+      x: null,
+      mode: "",
+      timeout: 6000
     };
   },
   methods: {
     switchPage(page) {
       window.location.href = page + ".html";
     },
-    register() {
-      window.location.href = "/register";
-    },
-    login() {
+    getOtp() {
       this.$http
-        .post("http://localhost:8088/user/login", this.userInfo)
+        .post("http://localhost:8088/user/getotp", this.userInfo)
         .then(response => {
           if (response.data.status == "success") {
-            // 存储登陆信息
-            this.loginLoading = true;
-            this.$store
-              .dispatch("login", this.form)
-              .then(() => {
-                try {
-                  this.$router.push({ name: "Index" });
-                } catch (err) {
-                  this.$router.push({ path: "/" });
-                }
-              })
-              .catch(res => {
-                console.log("login-failed", res);
-                this.$message({
-                  type: "error",
-                  text: this.$t("common.invalid_password_username")
-                });
-              })
-              .finally(() => {
-                this.loginLoading = false;
-              });
-
-            this.message = "登陆成功, 正在跳转页面...";
+            this.message = "otp已发送到您的手机上，请注意查收";
             Snackbar.success(this.message);
-            // 定时跳转页面
-            setTimeout(() => {
-              window.location.href = "/dashboard";
-            }, 1500);
           } else {
-            this.message = "登陆失败，原因为" + response.data.data.errMsg;
+            this.message = "验证码发送失败，原因为" + response.data.data.errMsg;
+            Snackbar.error(this.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.snackbar = true;
+        });
+    },
+    register() {
+      this.$http
+        .post("http://localhost:8088/user/register", this.userInfo)
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "注册成功, 正在跳转登陆界面...";
+            Snackbar.success(this.message);
+            setTimeout(() => {
+              window.location.href = "/login";
+            }, 3000);
+          } else {
+            this.message = "注册失败，原因为" + response.data.data.errMsg;
             Snackbar.error(this.message);
           }
         })
         .catch(error => {
           console.log(error);
           Snackbar.error(error);
+        })
+        .finally(() => {
+          //   this.snackbar = true;
         });
     }
   }

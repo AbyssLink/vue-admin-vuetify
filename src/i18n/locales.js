@@ -234,7 +234,7 @@ export default {
     },
     uIComponents: {
       en: 'UI Components',
-      'zh-CN': 'UI 组件',
+      'zh-CN': '功能列表',
     },
     tables: {
       en: 'Tables',

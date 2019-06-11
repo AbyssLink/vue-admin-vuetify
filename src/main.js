@@ -73,7 +73,7 @@ Vue.router.beforeEach((to, from, next) => {
           next();
         })
         .catch(() => {
-          next('/login');
+          next();
         });
     } else {
       next();

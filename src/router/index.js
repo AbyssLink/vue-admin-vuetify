@@ -1,14 +1,12 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Login from '@/views/auth/TheLogin.vue';
+import Register from '@/views/auth/TheRegister.vue';
 import Layout from '@/views/layouts/AppLayout.vue';
 import LayoutWithoutSidebar from '@/views/layouts/AppLayoutWithoutSidebar.vue';
 
 import components from './modules/components';
-import widgets from './modules/widgets';
 import uiComponents from './modules/ui-components';
-import tables from './modules/tables';
-import charts from './modules/charts';
 
 Vue.use(Router);
 
@@ -34,10 +32,19 @@ export default new Router({
       },
     },
     {
+      path: '/register',
+      name: 'register',
+      component: Register,
+      meta: {
+        hidden: true,
+      },
+    },
+    {
       path: '/',
       redirect: { name: 'Dashboard' },
       meta: {
         hidden: true,
+        hasMulSub: false,
       },
     },
     {
@@ -58,11 +65,8 @@ export default new Router({
             icon: 'dashboard',
           },
         },
-        components,
-        widgets,
         uiComponents,
-        tables,
-        charts,
+        components,
       ],
     },
     {

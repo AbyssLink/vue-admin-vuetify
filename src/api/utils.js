@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Axios from 'axios';
-import Snackbar from '../components/snackbar/index';
 
 Vue.prototype.$http = Axios;
 
@@ -12,7 +11,7 @@ const service = Vue.prototype.$http.create({
 
 /* eslint-disable no-param-reassign */
 service.interceptors.request.use((request) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token') || 'TEMP_ACCESS_TOKEN';
 
   if (token) {
     request.headers.Authorization = `${Vue.prototype.authType || 'Bearer'} ${token}`;
@@ -60,21 +59,21 @@ function access(url, param, method) {
     return Promise.reject(res);
   }, (res) => {
     // FIXME: This is not the best method.
-    let errMsg = '';
+    // let errMsg = '';
 
-    if (res.status === 401) {
-      errMsg = '您无权访问该页面';
-    } else if (res.status === 403) {
-      errMsg = '禁止访问';
-    } else if (res.status === 404) {
-      errMsg = '您访问的页面不存在了';
-    } else if (res.status === 500) {
-      errMsg = '服务器出了一点问题，请联系管理员';
-    }
+    // if (res.status === 401) {
+    //   errMsg = '您无权访问该页面';
+    // } else if (res.status === 403) {
+    //   errMsg = '禁止访问';
+    // } else if (res.status === 404) {
+    //   errMsg = '您访问的页面不存在了';
+    // } else if (res.status === 500) {
+    //   errMsg = '服务器出了一点问题，请联系管理员';
+    // }
 
-    if (errMsg) {
-      Snackbar.error(errMsg);
-    }
+    // if (errMsg) {
+    //   Snackbar.error(errMsg);
+    // }
 
     // Throw it again so you can handle it later.
     return Promise.reject(res);

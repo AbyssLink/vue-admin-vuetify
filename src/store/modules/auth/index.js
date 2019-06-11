@@ -2,7 +2,7 @@ import API from '@/api';
 import * as types from './types';
 
 const state = {
-  token: localStorage.getItem('token') || null,
+  token: localStorage.getItem('token') || 'TEMP_ACCESS_TOKEN',
   me: {},
 };
 

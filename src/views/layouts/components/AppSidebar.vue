@@ -9,20 +9,18 @@
     clipped="clipped"
     :temporary="temporary"
     mobile-break-point="400"
-    :mini-variant="miniVariant">
-    <v-list
-      expand
-      dense>
+    :mini-variant="miniVariant"
+  >
+    <v-list expand dense>
       <template v-for="(route, index) in routes">
         <template v-if="route.meta && route.meta.hasMulSub">
           <v-list-group
             v-if="roleShow(route)"
             value="true"
             :prepend-icon="route.meta && route.meta.icon"
-            :key="index">
-            <v-list-tile
-              slot="activator"
-              ripple>
+            :key="index"
+          >
+            <v-list-tile slot="activator" ripple>
               <v-list-tile-content>
                 <v-list-tile-title>{{ generateTitle(route.name) }}</v-list-tile-title>
               </v-list-tile-content>
@@ -31,7 +29,8 @@
               ripple
               v-for="(cRoute, idx) in route.children"
               :to="{ name: cRoute.name }"
-              :key="idx">
+              :key="idx"
+            >
               <v-list-tile-action>
                 <v-icon>{{ cRoute.meta && cRoute.meta.icon }}</v-icon>
               </v-list-tile-action>
@@ -42,11 +41,7 @@
           </v-list-group>
         </template>
         <template v-else>
-          <v-list-tile
-            v-if="roleShow(route)"
-            ripple
-            :to="{ name: route.name }"
-            :key="index">
+          <v-list-tile v-if="roleShow(route)" ripple :to="{ name: route.name }" :key="index">
             <v-list-tile-action>
               <v-icon>{{ route.meta && route.meta.icon }}</v-icon>
             </v-list-tile-action>
@@ -61,13 +56,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import 'perfect-scrollbar/css/perfect-scrollbar.css';
-import PerfectScrollbar from 'perfect-scrollbar';
-import { fistLowerUpper } from '@/utils/util';
+import { mapState } from "vuex";
+import "perfect-scrollbar/css/perfect-scrollbar.css";
+import PerfectScrollbar from "perfect-scrollbar";
+import { fistLowerUpper } from "@/utils/util";
 
 export default {
-  name: 'AppSidebar',
+  name: "AppSidebar",
   // props: [
   //   'drawer',
   // ],
@@ -78,23 +73,26 @@ export default {
       // miniVariant: true,
       ps: null,
       clipped: true,
-      temporary: false,
+      temporary: false
     };
   },
   watch: {
     // eslint-disable-next-line
-    '$vuetify.breakpoint'(newVal) {
-      this.$emit('changeTemporary', newVal.smAndDown);
+    "$vuetify.breakpoint"(newVal) {
+      this.$emit("changeTemporary", newVal.smAndDown);
       this.temporary = newVal.smAndDown;
-    },
+    }
   },
   computed: {
     ...mapState({
-      user: state => state.auth.me,
+      user: state => state.auth.me
     }),
     routes() {
       const routeName = this.$route.name;
       const { routes } = this.$router.options;
+
+      console.log("route Name = ************* ->");
+      console.log(routes);
 
       try {
         for (let i = 0, len = routes.length; i < len; i += 1) {
@@ -110,14 +108,16 @@ export default {
           }
         }
       } catch (err) {
-        console.log('>>>sidebar', err);
+        console.log(">>>sidebar", err);
       }
 
-      return routes[2].children;
-    },
+      return routes[3].children;
+    }
   },
   methods: {
     roleShow(route) {
+      console.log("---route", route);
+
       // hack, there is no user when logout
       if (!route.meta) {
         return true;
@@ -128,7 +128,9 @@ export default {
       }
 
       const { auth } = route.meta;
-      return auth ? (!auth.length && !this.user.role) || auth.includes(this.user.role) : !auth;
+      return auth
+        ? (!auth.length && !this.user.role) || auth.includes(this.user.role)
+        : !auth;
     },
     toggleSidebar() {
       this.drawer = !this.drawer;
@@ -137,25 +139,25 @@ export default {
       this.temporary = val;
     },
     generateTitle(title, route) {
-      if (route && route.name === 'UIComponents') {
+      if (route && route.name === "UIComponents") {
         return title;
       }
 
-      return title ? this.$t(`sidebar.${fistLowerUpper(title)}`) : '';
-    },
+      return title ? this.$t(`sidebar.${fistLowerUpper(title)}`) : "";
+    }
   },
   created() {
     this.$nextTick(() => {
-      this.ps = new PerfectScrollbar('#sidebar', {
-        suppressScrollX: true,
+      this.ps = new PerfectScrollbar("#sidebar", {
+        suppressScrollX: true
       });
-      this.$emit('changeTemporary', this.temporary);
+      this.$emit("changeTemporary", this.temporary);
     });
     this.temporary = this.$vuetify && this.$vuetify.breakpoint.smAndDown;
   },
   beforeDestroy() {
     this.ps.destroy();
     this.ps = null;
-  },
+  }
 };
 </script>

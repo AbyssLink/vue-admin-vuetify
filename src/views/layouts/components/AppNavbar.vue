@@ -19,7 +19,7 @@
           :to="{ name : 'Dashboard' }"
           class="toolbar-title"
         >
-          <span>VUE-ADMIN-VUETIFY</span>
+          <span>ONLINE-Purchase-Platform</span>
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
