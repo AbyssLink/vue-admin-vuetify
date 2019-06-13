@@ -12,63 +12,27 @@
         <td class="text-xs-left">{{ props.item.stock }}</td>
         <td class="text-xs-left">{{ props.item.sales }}</td>
         <td class="text-xs-left">{{ props.item.description }}</td>
+        <td class="justify-center layout px-0">
+          <v-btn icon class="mx-0" @click="editItem(props.item)">
+            <v-icon color="teal">edit</v-icon>
+          </v-btn>
+          <v-btn icon class="mx-0" @click="deleteItem(props.item)">
+            <v-icon color="pink">delete</v-icon>
+          </v-btn>
+        </td>
       </template>
     </v-data-table>
-    <v-dialog v-model="dialog" persistent max-width="600px">
-      <template v-slot:activator="{ on }">
-        <v-layout row justify-center>
-          <v-btn color="pink" dark v-on="on">Add</v-btn>
-        </v-layout>
-      </template>
+    <v-dialog v-model="dialog" max-width="360">
       <v-card>
-        <v-card-title>
-          <span class="headline">Item Information</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12>
-                <v-form ref="form">
-                  <v-text-field
-                    :counter="11"
-                    :rules="commonRules"
-                    label="title"
-                    required
-                    v-model="itemInfo.title"
-                  ></v-text-field>
-                  <v-text-field
-                    :rules="commonRules"
-                    label="description"
-                    required
-                    v-model="itemInfo.description"
-                  ></v-text-field>
-                  <v-text-field
-                    :rules="commonRules"
-                    label="price"
-                    required
-                    v-model="itemInfo.price"
-                  ></v-text-field>
-                  <v-text-field
-                    :rules="commonRules"
-                    label="stock"
-                    required
-                    v-model="itemInfo.stock"
-                  ></v-text-field>
-                  <v-text-field
-                    :rules="commonRules"
-                    label="imgUrl"
-                    required
-                    v-model="itemInfo.imgUrl"
-                  ></v-text-field>
-                </v-form>
-              </v-flex>
-            </v-layout>
-          </v-container>
+        <v-card-title class="headline orange white--text">warning!</v-card-title>
+        <v-card-text class="mb-2 font-weight-light">
+          Confirm to delete?
+          <br>Deleted item cannot be recovered.
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click="createItem">Save</v-btn>
+          <v-btn color="blue darken-1" flat="flat" @click="dialog = false">Cancle</v-btn>
+          <v-btn color="grey darken-1" flat="flat" @click="confirmDelete()">Confirm</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -109,7 +73,8 @@ export default {
         rowsPerPage: 25 // -1 for All",
       },
       items: [],
-      commonRules: [v => !!v || "This is required"]
+      commonRules: [v => !!v || "This is required"],
+      actions: {}
     };
   },
   created: () => {},
@@ -136,7 +101,7 @@ export default {
         });
     },
     getItemDetail(id) {
-      window.location.href = "carousels?id=" + id;
+      window.location.href = "detail?id=" + id;
     },
     createItem() {
       this.dialog = false;
@@ -155,6 +120,32 @@ export default {
           Snackbar.error(error);
           console.log(error);
         });
+    },
+    deleteItem(item) {
+      this.dialog = true;
+      this.itemInfo = item;
+    },
+    confirmDelete() {
+      this.dialog = false;
+
+      Vue.prototype.$http
+        .get("http://localhost:8088/item/delete?id=" + this.itemInfo.id)
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "删除成功, id = " + this.itemInfo.id;
+            this.items.splice(this.items.indexOf(this.itemInfo), 1); //删除前端数据对应项
+            Snackbar.info(this.message);
+          } else {
+            this.message = "删除失败，原因为" + response.data.data.errMsg;
+            Snackbar.error(this.message);
+          }
+        })
+        .catch(error => {
+          Snackbar.error(error);
+        });
+    },
+    editItem(item) {
+      Snackbar.info("开发中，请等待……");
     }
   },
   mounted() {

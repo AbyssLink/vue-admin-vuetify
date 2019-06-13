@@ -111,9 +111,6 @@ export default {
         .catch(error => {
           Snackbar.error(error);
         })
-        .finally(() => {
-          // this.snackbar = true;
-        });
     }
   },
   mounted() {

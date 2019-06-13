@@ -7,6 +7,8 @@ import LayoutWithoutSidebar from '@/views/layouts/AppLayoutWithoutSidebar.vue';
 
 import components from './modules/components';
 import uiComponents from './modules/ui-components';
+import userComponents from './modules/user-components';
+import orderComponents from './modules/order-components';
 
 Vue.use(Router);
 
@@ -66,6 +68,8 @@ export default new Router({
           },
         },
         uiComponents,
+        orderComponents,
+        userComponents,
         components,
       ],
     },

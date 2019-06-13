@@ -100,11 +100,11 @@ export default {
                 for (
                   let k = 0, size = child.children.length;
                   k < size;
-                  k+=1
+                  k += 1
                 ) {
                   const subChild = child.children[k];
-                  console.log("subChild -->")
-                  console.log(subChild);
+                  // console.log("subChild -->")
+                  // console.log(subChild);
                   if (subChild.meta.hidden == true) {
                     child.children.splice(k, 1); //删除不显示的路由项
                   }
@@ -150,7 +150,7 @@ export default {
       this.temporary = val;
     },
     generateTitle(title, route) {
-      if (route && route.name === "UIComponents") {
+      if (route && (route.name === "Item" || route.name === "Order" || route.name === "User")) {
         return title;
       }
 

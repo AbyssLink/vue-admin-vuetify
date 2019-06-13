@@ -7,12 +7,15 @@
             @click.native="getItemDetail(item.id)"
             class="mx-auto"
             color="grey lighten-4"
-            min-width="320"
-            max-width="600"
+            min-width="300"
+            max-width="400"
             slot-scope="{ hover }"
             hover
           >
-            <v-img :aspect-ratio="15/14" :src="item.imgUrl">
+            <v-img
+              :aspect-ratio="15/14"
+              :src="item.imgUrl"
+            >
               <v-expand-transition>
                 <div
                   class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
@@ -88,7 +91,7 @@ export default {
         });
     },
     getItemDetail(id) {
-      window.location.href = "carousels?id=" + id;
+      window.location.href = "detail?id=" + id;
     }
   },
   mounted() {

@@ -19,7 +19,7 @@
                 <v-form>
                   <v-text-field
                     v-model="userInfo.telephone"
-                    prepend-icon="person"
+                    prepend-icon="phone"
                     :rules="commonRules"
                     name="telephone"
                     label="telephone"
@@ -27,7 +27,7 @@
                   ></v-text-field>
                   <v-text-field
                     v-model="userInfo.otpCode"
-                    prepend-icon="lock"
+                    prepend-icon="notifications_active"
                     name="otpCode"
                     :rules="commonRules"
                     label="otpCode"
@@ -36,7 +36,7 @@
                   ></v-text-field>
                   <v-text-field
                     v-model="userInfo.name"
-                    prepend-icon="lock"
+                    prepend-icon="person"
                     name="name"
                     :rules="commonRules"
                     label="name"
@@ -54,7 +54,7 @@
                   ></v-text-field>
                   <v-text-field
                     v-model="userInfo.gender"
-                    prepend-icon="lock"
+                    prepend-icon="face"
                     name="gender"
                     :rules="commonRules"
                     label="gender"
@@ -63,7 +63,7 @@
                   ></v-text-field>
                   <v-text-field
                     v-model="userInfo.age"
-                    prepend-icon="lock"
+                    prepend-icon="cake"
                     name="age"
                     :rules="commonRules"
                     label="age"
@@ -74,8 +74,8 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="warning" class="white--text" @click="getOtp">获取验证码</v-btn>
-                <v-btn color="primary" @click="register">注册</v-btn>
+                <v-btn color="warning" class="white--text" @click="getOtp">getOtp</v-btn>
+                <v-btn color="primary" @click="register">Register</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>

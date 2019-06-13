@@ -40,7 +40,7 @@
           :close-on-content-click="false"
           transition="scale-transition"
         >
-          <v-btn
+          <!-- <v-btn
             icon
             flat
             slot="activator"
@@ -57,7 +57,7 @@
               v-else
               medium
             >notifications</v-icon>
-          </v-btn>
+          </v-btn> -->
           <notification-list @unreadLen="(val) => badgeLen = val" />
         </v-menu>
         <v-btn
@@ -80,7 +80,7 @@
           >
             <v-avatar size="40">
               <img
-                :src="user.avatar"
+                src="https://img.icons8.com/color/420/circled-user-male-skin-type-1-2.png"
                 alt=""
               >
             </v-avatar>

@@ -232,9 +232,17 @@ export default {
       en: 'Icons',
       'zh-CN': '图标',
     },
-    uIComponents: {
+    item: {
       en: 'UI Components',
-      'zh-CN': '功能列表',
+      'zh-CN': '商品',
+    },
+    order: {
+      en: 'Order Components',
+      'zh-CN': '订单',
+    },
+    user: {
+      en: 'User Components',
+      'zh-CN': '用户',
     },
     tables: {
       en: 'Tables',
