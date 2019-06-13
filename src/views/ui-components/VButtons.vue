@@ -49,9 +49,6 @@ export default {
         .catch(error => {
           Snackbar.error(error);
           console.log(error);
-        })
-        .finally(() => {
-          // this.snackbar = true;
         });
     }
   }

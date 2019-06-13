@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="headers" :items="users" class="elevation-1">
+  <v-data-table :headers="headers" :items="users" :pagination.sync="pagination" class="elevation-1">
     <template v-slot:items="props">
       <td>{{ props.item.name }}</td>
       <td class="text-xs-left">{{ props.item.telephone }}</td>
@@ -34,14 +34,14 @@ export default {
         { text: "gender", value: "gender" },
         { text: "age", value: "age" }
       ],
-      users: [],
+      pagination: {
+        rowsPerPage: 25 // -1 for All",
+      },
+      users: []
     };
   },
   created: () => {},
   methods: {
-    switchPage(page) {
-      window.location.href = page + ".html";
-    },
     getItemList() {
       Vue.prototype.$http
         .get("http://localhost:8088/user/list")

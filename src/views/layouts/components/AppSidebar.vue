@@ -91,14 +91,25 @@ export default {
       const routeName = this.$route.name;
       const { routes } = this.$router.options;
 
-      console.log("route Name = ************* ->");
-      console.log(routes);
-
       try {
         for (let i = 0, len = routes.length; i < len; i += 1) {
           if (routes[i].children) {
             for (let j = 0, len = routes[i].children.length; j < len; j += 1) {
               const child = routes[i].children[j];
+              if (child.children) {
+                for (
+                  let k = 0, size = child.children.length;
+                  k < size;
+                  k+=1
+                ) {
+                  const subChild = child.children[k];
+                  console.log("subChild -->")
+                  console.log(subChild);
+                  if (subChild.meta.hidden == true) {
+                    child.children.splice(k, 1); //删除不显示的路由项
+                  }
+                }
+              }
               if (child.name === routeName) {
                 return routes[i].children;
               }

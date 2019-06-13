@@ -1,7 +1,7 @@
 <template>
   <v-hover>
-    <v-card class="mx-auto" color="grey lighten-4" max-width="600" slot-scope="{ hover }">
-      <v-img :aspect-ratio="16/12" :src="itemInfo.imgUrl">
+    <v-card class="mx-auto" color="grey lighten-4" max-width="700" slot-scope="{ hover }" hover>
+      <v-img :aspect-ratio="16/14" :src="itemInfo.imgUrl">
         <v-expand-transition>
           <div
             class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
@@ -27,26 +27,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import Vue from "vue";
 import Snackbar from "../../components/snackbar/index";
-
-axios.defaults.withCredentials = true;
-axios.defaults.headers.post["Content-Type"] =
-  "application/x-www-form-urlencoded";
-axios.defaults.headers.get["Content-Type"] =
-  "application/x-www-form-urlencoded";
-axios.defaults.transformRequest = [
-  function(data) {
-    let ret = "";
-    for (let it in data) {
-      ret += encodeURIComponent(it) + "=" + encodeURIComponent(data[it]) + "&";
-    }
-    return ret;
-  }
-];
-//然后再修改原型链
-Vue.prototype.$http = axios;
 
 function getParam(paramName) {
   // 解析 url 参数, 获取 qurey string
@@ -90,30 +72,17 @@ export default {
         itemId: "",
         amount: 1, //先写死
         promoId: ""
-      },
-      icons: {
-        1: "email",
-        2: "phone",
-        3: "forum",
-        4: "help",
-        5: "share"
-      },
-      commonRules: [v => !!v || "This is required"],
-      y: "top",
-      x: null,
-      mode: "",
-      timeout: 6000
+      }
     };
   },
   methods: {
     createOrder() {
       this.orderInfo.itemId = this.itemInfo.id;
-      this.$http
+      Vue.prototype.$http
         .post("http://localhost:8088/order/createorder", this.orderInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "下单成功！交易金额: " + this.itemInfo.price;
-            setTimeout("window.location.reload()", 3000);
             Snackbar.success(this.message);
           } else {
             this.message = "下单失败，原因为: " + response.data.data.errMsg;
@@ -122,14 +91,11 @@ export default {
         })
         .catch(error => {
           console.log(error);
-        })
-        .finally(() => {
-          // this.snackbar = true;
         });
     },
     getItemDetail() {
       this.itemInfo.id = getParam("id");
-      this.$http
+      Vue.prototype.$http
         .get("http://localhost:8088/item/get?id=" + this.itemInfo.id)
         .then(response => {
           if (response.data.status == "success") {

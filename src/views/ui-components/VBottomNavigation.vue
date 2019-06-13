@@ -1,142 +1,109 @@
 <template>
-  <v-container
-    grid-list-lg
-    pa-0
-  >
-    <v-layout wrap>
-      <!-- Base -->
-      <v-flex
-        sm12
-        md6
-      >
-        <v-basic-card title="BottomNavigation - Usage">
-          <template slot="card-content">
-            <v-card
-              class="overflow-hidden"
-              height="300px"
-              flat
-            >
-              <v-card-text class="text-xs-center">
-                <v-btn
-                  flat
-                  color="primary"
-                  @click="showNav = !showNav"
-                >
-                  Toggle Nav
-                </v-btn>
-              </v-card-text>
-              <div class="headline text-xs-center">
-                Active: {{ bottomNav }}
-              </div>
-              <v-bottom-nav
-                absolute
-                :active.sync="bottomNav"
-                :value="showNav"
-                color="transparent"
-              >
-                <v-btn
-                  color="teal"
-                  flat
-                  value="recent"
-                >
-                  <span>Recent</span>
-                  <v-icon>history</v-icon>
-                </v-btn>
-                <v-btn
-                  color="teal"
-                  flat
-                  value="favorites"
-                >
-                  <span>Favorites</span>
-                  <v-icon>favorite</v-icon>
-                </v-btn>
-                <v-btn
-                  color="teal"
-                  flat
-                  value="nearby"
-                >
-                  <span>Nearby</span>
-                  <v-icon>place</v-icon>
-                </v-btn>
-              </v-bottom-nav>
-            </v-card>
-          </template>
-        </v-basic-card>
-      </v-flex>
-
-      <v-flex
-        sm12
-        md6
-      >
-        <v-basic-card title="BottomNavigation - Color & shift">
-          <template slot="card-content">
-            <v-card
-              class="overflow-hidden"
-              height="300px"
-              flat
-            >
-              <div
-                class="headline text-xs-center"
-                :style="{ color: color }"
-              >
-                Active: {{ tab }}
-              </div>
-              <v-bottom-nav
-                absolute
-                :active.sync="tab"
-                :color="color"
-                :value="true"
-              >
-                <v-btn dark>
-                  <span>Video</span>
-                  <v-icon>ondemand_video</v-icon>
-                </v-btn>
-                <v-btn dark>
-                  <span>Music</span>
-                  <v-icon>music_note</v-icon>
-                </v-btn>
-                <v-btn dark>
-                  <span>Book</span>
-                  <v-icon>book</v-icon>
-                </v-btn>
-                <v-btn dark>
-                  <span>Image</span>
-                  <v-icon>image</v-icon>
-                </v-btn>
-              </v-bottom-nav>
-            </v-card>
-          </template>
-        </v-basic-card>
+  <v-container fluid grid-list-xl>
+    <v-layout wrap justify-space-around>
+      <v-flex v-for="item in items" :key="item.id">
+        <v-hover>
+          <v-card
+            @click.native="getItemDetail(item.id)"
+            class="mx-auto"
+            color="grey lighten-4"
+            min-width="320"
+            max-width="600"
+            slot-scope="{ hover }"
+            hover
+          >
+            <v-img :aspect-ratio="15/14" :src="item.imgUrl">
+              <v-expand-transition>
+                <div
+                  class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
+                  style="height: 100%;"
+                  v-if="hover"
+                >{{item.price}} ¥</div>
+              </v-expand-transition>
+            </v-img>
+            <v-card-text class="pt-4" style="position: relative;">
+              <h1 class="font-weight-light orange--text mb-2">{{item.title}}</h1>
+            </v-card-text>
+          </v-card>
+        </v-hover>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
-<script>
+ <script>
+import Vue from "vue";
+import Snackbar from "../../components/snackbar/index";
+
 export default {
-  name: 'VBottomNavigation',
   data() {
     return {
-      showNav: true,
-      bottomNav: 'recent',
-      tab: null,
+      message: "",
+      itemInfo: {
+        id: "",
+        title: "",
+        price: "",
+        stock: "",
+        description: "",
+        sales: "",
+        imgUrl: ""
+      },
+      headers: [
+        {
+          text: "title",
+          align: "left",
+          sortable: false,
+          value: "title"
+        },
+        { text: "price (rmb)", value: "price" },
+        { text: "stock", value: "stock" },
+        { text: "sales", value: "sales" },
+        { text: "description", value: "description" }
+      ],
+      pagination: {
+        rowsPerPage: 25 // -1 for All",
+      },
+      items: [],
+      commonRules: [v => !!v || "This is required"]
     };
   },
-  computed: {
-    color() {
-      switch (this.tab) {
-        case 0:
-          return 'indigo';
-        case 1:
-          return 'teal';
-        case 2:
-          return 'blue';
-        case 3:
-          return 'brown';
-        default:
-          return 'purple';
-      }
+  created: () => {},
+  methods: {
+    getItemList() {
+      Vue.prototype.$http
+        .get("http://localhost:8088/item/list")
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "获取商品列表成功";
+            this.items = response.data.data;
+            Snackbar.info(this.message);
+          } else {
+            this.message =
+              "获取商品列表失败，原因为" + response.data.data.errMsg;
+            Snackbar.error(this.message);
+          }
+        })
+        .catch(error => {
+          Snackbar.error(error);
+        });
     },
+    getItemDetail(id) {
+      window.location.href = "carousels?id=" + id;
+    }
   },
+  mounted() {
+    this.getItemList();
+  }
 };
 </script>
+
+<style scoped>
+.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  opacity: 0.5;
+  position: absolute;
+  width: 100%;
+}
+</style>
