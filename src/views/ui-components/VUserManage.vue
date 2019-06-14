@@ -36,6 +36,96 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialog1" persistent max-width="600px">
+      <template v-slot:activator="{ on }">
+        <v-layout row justify-center>
+          <v-btn color="pink" dark v-on="on">Add</v-btn>
+        </v-layout>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline">Item Information</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12>
+                <v-form ref="form">
+                  <v-text-field
+                    v-model="userInfo.telephone"
+                    prepend-icon="phone"
+                    :rules="commonRules"
+                    name="telephone"
+                    label="telephone"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.otpCode"
+                    prepend-icon="notifications_active"
+                    name="otpCode"
+                    :rules="commonRules"
+                    label="otpCode"
+                    id="otpCode"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.name"
+                    prepend-icon="person"
+                    name="name"
+                    :rules="commonRules"
+                    label="name"
+                    id="name"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.password"
+                    prepend-icon="lock"
+                    name="password"
+                    :rules="commonRules"
+                    label="Password"
+                    id="password"
+                    type="password"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.gender"
+                    prepend-icon="group"
+                    name="gender"
+                    :rules="commonRules"
+                    label="gender"
+                    id="gender"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.age"
+                    prepend-icon="cake"
+                    name="age"
+                    :rules="commonRules"
+                    label="age"
+                    id="age"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.avatar"
+                    prepend-icon="face"
+                    name="avatar"
+                    :rules="commonRules"
+                    label="avatar"
+                    id="avatar"
+                    type="text"
+                  ></v-text-field>
+                </v-form>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="grey darken-1" flat @click="dialog1 = false">Close</v-btn>
+          <v-btn color="orange darken-1" flat @click="getOtp">getOtp</v-btn>
+          <v-btn color="blue darken-1" flat @click="createItem">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -47,12 +137,14 @@ export default {
   data() {
     return {
       dialog: false,
+      dialog1: false,
       message: "",
       userInfo: {
         name: "",
         telephone: "",
         gender: "",
-        age: ""
+        age: "",
+        avatar: ""
       },
       headers: [
         {
@@ -68,7 +160,9 @@ export default {
       pagination: {
         rowsPerPage: 25 // -1 for All",
       },
-      users: []
+      users: [],
+      commonRules: [v => !!v || "This is required"],
+      actions: {}
     };
   },
   created: () => {},
@@ -119,6 +213,44 @@ export default {
     },
     editItem(item) {
       Snackbar.info("开发中，请等待……");
+    },
+    getOtp() {
+      Vue.prototype.$http
+        .post("http://localhost:8088/user/getotp", this.userInfo)
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "otp已发送";
+            Snackbar.success(this.message);
+          } else {
+            this.message = "验证码发送失败，原因为" + response.data.data.errMsg;
+            Snackbar.error(this.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    createItem() {
+      this.dialog1 = false;
+
+      Vue.prototype.$http
+        .post("http://localhost:8088/user/register", this.userInfo)
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "新增用户成功";
+            Snackbar.success(this.message);
+          } else {
+            this.message = "新增用户失败，原因为" + response.data.data.errMsg;
+            Snackbar.error(this.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          Snackbar.error(error);
+        })
+        .finally(() => {
+          //   this.snackbar = true;
+        });
     }
   },
   mounted() {

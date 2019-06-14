@@ -54,7 +54,7 @@
                   ></v-text-field>
                   <v-text-field
                     v-model="userInfo.gender"
-                    prepend-icon="face"
+                    prepend-icon="group"
                     name="gender"
                     :rules="commonRules"
                     label="gender"
@@ -68,6 +68,15 @@
                     :rules="commonRules"
                     label="age"
                     id="age"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.avatar"
+                    prepend-icon="face"
+                    name="avatar"
+                    :rules="commonRules"
+                    label="avatar"
+                    id="avatar"
                     type="text"
                   ></v-text-field>
                 </v-form>
@@ -98,7 +107,8 @@ export default {
         name: "",
         password: "",
         age: "",
-        gender: ""
+        gender: "",
+        avatar: ""
       },
       commonRules: [v => !!v || "This is required"],
       source: "https://github.com/ShiroCheng/spikeproject"
@@ -131,9 +141,7 @@ export default {
           if (response.data.status == "success") {
             this.message = "注册成功, 正在跳转登陆界面...";
             Snackbar.success(this.message);
-            setTimeout(() => {
-              window.location.href = "/login";
-            }, 3000);
+            this.$router.push({ name: "Login" });
           } else {
             this.message = "注册失败，原因为" + response.data.data.errMsg;
             Snackbar.error(this.message);

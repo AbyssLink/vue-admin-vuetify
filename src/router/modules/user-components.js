@@ -11,6 +11,12 @@ const routes = {
   },
   children: [
     {
+      path: 'list',
+      name: '用户页',
+      component: () => import('@/views/ui-components/VUserList.vue'),
+      meta: {},
+    },
+    {
       path: 'manage',
       name: '用户管理',
       component: () => import('@/views/ui-components/VUserManage.vue'),
