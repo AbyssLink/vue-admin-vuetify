@@ -9,7 +9,7 @@ const state = {
 const getters = {};
 
 const actions = {
-  readUser({ commit }, params) {
+ /*  readUser({ commit }, params) {
     return API.readUser(params).then((value) => {
       commit(types.READ_USER, { value });
     }, res => Promise.reject(res));
@@ -18,7 +18,7 @@ const actions = {
     return API.readUsers().then((value) => {
       commit(types.READ_USERS, { value });
     }, res => Promise.reject(res));
-  },
+  }, */
 };
 
 const mutations = {

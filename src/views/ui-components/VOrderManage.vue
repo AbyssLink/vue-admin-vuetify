@@ -24,10 +24,10 @@
     </v-data-table>
     <v-dialog v-model="dialog" max-width="360">
       <v-card>
-        <v-card-title class="headline orange white--text">warning!</v-card-title>
+        <v-card-title class="headline orange white--text">WARNING</v-card-title>
         <v-card-text class="mb-2 font-weight-light">
           Confirm to delete?
-          <br>Deleted item cannot be recovered.
+          <br>Deleted item CANNOT be recovered.
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

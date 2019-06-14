@@ -72,45 +72,28 @@ export default {
     };
   },
   methods: {
-    switchPage(page) {
-      window.location.href = page + ".html";
-    },
     register() {
-      window.location.href = "/register";
+      this.$router.push({ name: "register" });
     },
     login() {
       Vue.prototype.$http
         .post("http://localhost:8088/user/login", this.userInfo)
         .then(response => {
           if (response.data.status == "success") {
-            // 存储登陆信息
-            this.loginLoading = true;
-            this.$store
-              .dispatch("login", this.form)
-              .then(() => {
-                try {
-                  this.$router.push({ name: "Index" });
-                } catch (err) {
-                  this.$router.push({ path: "/" });
-                }
-              })
-              .catch(res => {
-                console.log("login-failed", res);
-                this.$message({
-                  type: "error",
-                  text: this.$t("common.invalid_password_username")
-                });
-              })
-              .finally(() => {
-                this.loginLoading = false;
-              });
+            // 存储登陆信息在客户端浏览器中
+            var userFullInfo = response.data.data;
+            localStorage.setItem("LOGIN_USER", JSON.stringify(userFullInfo));
 
+            this.loginLoading = true;
             this.message = "登陆成功, 正在跳转页面...";
             Snackbar.success(this.message);
-            // 定时跳转页面
+            this.loginLoading = false;
+            this.$router.push({ name: "Index" });
+            /*             // 定时跳转页面
             setTimeout(() => {
               window.location.href = "/dashboard";
-            }, 1500);
+              //  this.$router.push({ name: "Index" });
+            }, 1500); */
           } else {
             this.message = "登陆失败，原因为" + response.data.data.errMsg;
             Snackbar.error(this.message);

@@ -24,7 +24,7 @@
         <v-chart
           style="width:100%;"
           :options="chartOption"
-          autoresize
+          auto-resize
         />
       </v-flex>
     </v-layout>

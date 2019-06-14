@@ -1,29 +1,62 @@
 <template>
-  <v-hover>
-    <v-card class="mx-auto" color="grey lighten-4" max-width="700" slot-scope="{ hover }" hover>
-      <v-img :aspect-ratio="16/14" :src="itemInfo.imgUrl">
-        <v-expand-transition>
-          <div
-            class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
-            style="height: 100%;"
-            v-if="hover"
-          >{{itemInfo.price}} ¥</div>
-        </v-expand-transition>
-      </v-img>
-      <v-card-text class="pt-4" style="position: relative;">
-        <v-btn @click="createOrder" absolute class="white--text" color="orange" fab large right top>
-          <v-icon>shopping_cart</v-icon>
-        </v-btn>
-        <div class="font-weight-light grey--text title mb-2">{{itemInfo.description}}</div>
-        <h3 class="display-1 font-weight-light orange--text mb-2">{{itemInfo.title}}</h3>
-        <div class="font-weight-light title mb-2">
-          销量: {{itemInfo.sales}}
+  <v-container fluid grid-list-xl>
+    <v-hover>
+      <v-card
+        class="mx-auto"
+        color="grey lighten-4"
+        min-width="300"
+        max-width="650"
+        slot-scope="{ hover }"
+        hover
+      >
+        <v-img :aspect-ratio="16/14" :src="itemInfo.imgUrl">
+          <v-expand-transition>
+            <div
+              class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
+              style="height: 100%;"
+              v-if="hover"
+            >{{itemInfo.price}} ¥</div>
+          </v-expand-transition>
+        </v-img>
+        <v-card-text class="pt-4" style="position: relative;">
+          <v-btn
+            @click="dialog = true"
+            absolute
+            class="white--text"
+            color="orange"
+            fab
+            large
+            right
+            top
+          >
+            <v-icon>shopping_cart</v-icon>
+          </v-btn>
+          <div class="font-weight-light grey--text title mb-2">{{itemInfo.description}}</div>
+          <h3 class="display-1 font-weight-light orange--text mb-2">{{itemInfo.title}}</h3>
+          <div class="font-weight-light title mb-2">
+            销量: {{itemInfo.sales}}
+            <br>
+            库存: {{itemInfo.stock}}
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-hover>
+    <v-dialog v-model="dialog" max-width="400">
+      <v-card>
+        <v-card-title class="headline green white--text">INFOMATION</v-card-title>
+        <v-card-text class="mb-1 font-weight-light subheading">
+          Confirm to buy?
           <br>
-          库存: {{itemInfo.stock}}
-        </div>
-      </v-card-text>
-    </v-card>
-  </v-hover>
+          Order price :{{this.itemInfo.price}}.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="grey darken-1" flat="flat" @click="dialog = false">Cancle</v-btn>
+          <v-btn color="blue darken-1" flat="flat" @click="createOrder">Confirm</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
@@ -56,8 +89,7 @@ function getParam(paramName) {
 export default {
   data() {
     return {
-      drawer: true,
-      snackbar: false,
+      dialog: false,
       message: "",
       itemInfo: {
         id: "",
@@ -77,6 +109,8 @@ export default {
   },
   methods: {
     createOrder() {
+      this.dialog = false;
+
       this.orderInfo.itemId = this.itemInfo.id;
       Vue.prototype.$http
         .post("http://localhost:8088/order/createorder", this.orderInfo)
@@ -110,7 +144,7 @@ export default {
         })
         .catch(error => {
           Snackbar.error(error);
-        })
+        });
     }
   },
   mounted() {

@@ -1,5 +1,6 @@
 import '@babel/polyfill';
 import Vue from 'vue';
+import Axios from 'axios';
 import moment from 'moment';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -11,7 +12,7 @@ import API from './api';
 import * as consts from './utils/consts';
 import './utils/compatible-ie';
 import i18n from './i18n';
-import Mock from './mock';
+// import Mock from './mock';
 import './plugins/vuetify';
 import './plugins/echarts';
 import './components/svg-icon';
@@ -35,7 +36,25 @@ try {
   console.error('>>>vconsole', err);
 }
 
-Mock.bootstrap();
+// 设置 request 格式
+Axios.defaults.withCredentials = true; //! 跨域带cookies
+Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+Axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
+Axios.defaults.transformRequest = [
+  // eslint-disable-next-line func-names
+  function (data) {
+    let ret = '';
+    // eslint-disable-next-line guard-for-in
+    for (const it in data) {
+      ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&';
+    }
+    return ret;
+  }
+];
+
+Vue.prototype.$http = Axios; // 再修改原型链
+
+// Mock.bootstrap();
 
 Vue.router = router;
 Vue.store = store;
@@ -66,7 +85,8 @@ Vue.router.beforeEach((to, from, next) => {
     next(`/login?redirect=${to.fullPath}`);
     NProgress.done();
   } else {
-    const { me } = store.getters;
+    next();
+    /* const { me } = store.getters;
     if (!me || !me.name) {
       store.dispatch('readMe', { token })
         .then(() => {
@@ -77,7 +97,7 @@ Vue.router.beforeEach((to, from, next) => {
         });
     } else {
       next();
-    }
+    } */
   }
 });
 Vue.router.beforeEach((to, from, next) => {

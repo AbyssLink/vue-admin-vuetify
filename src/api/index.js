@@ -1,6 +1,4 @@
-/* eslint-disable camelcase */
-/* eslint-disable max-len  */
-import request from './utils';
+/* import request from './utils';
 
 const authUrls = {
   login: '/login',
@@ -42,3 +40,4 @@ export default new function API() {
   // table
   this.readTablesList = () => request.get(urls.readTablesList, {});
 }();
+ */

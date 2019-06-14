@@ -18,7 +18,6 @@ Axios.defaults.transformRequest = [
 
 Vue.prototype.$http = Axios; // 再修改原型链
 
-
 const service = Vue.prototype.$http.create({
   headers: {
     'content-type': Vue.prototype.contentType || 'application/json;charset=utf-8',

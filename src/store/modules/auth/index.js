@@ -9,7 +9,7 @@ const state = {
 const getters = {};
 
 const actions = {
-  login({ commit, dispatch }, params) {
+  /* login({ commit, dispatch }, params) {
     return API.login(params).then((value) => {
       commit(types.LOGIN, { value });
       const token = value.data.access_token;
@@ -27,11 +27,11 @@ const actions = {
     return API.logout().then(() => {
       commit(types.LOGOUT);
     }, res => Promise.reject(res));
-  },
+  }, */
 };
 
 const mutations = {
-  [types.READ_ME](state, { value }) {
+/*   [types.READ_ME](state, { value }) {
     state.me = value.data;
   },
   [types.LOGIN](state, { value }) {
@@ -40,7 +40,7 @@ const mutations = {
   [types.LOGOUT](state) {
     localStorage.removeItem('token');
     state.token = null;
-  },
+  }, */
 };
 
 export default {
