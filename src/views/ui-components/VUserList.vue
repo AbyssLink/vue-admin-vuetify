@@ -1,29 +1,33 @@
 <template>
   <v-container fluid grid-list-xl>
-    <v-layout wrap justify-space-around>
+    <v-layout row wrap justify-space-around>
       <v-flex v-for="item in items" :key="item.id">
         <v-hover>
           <v-card
-            @click.native="getItemDetail(item.id)"
+            dark
+            tile
+            flat
             class="mx-auto"
-            color="grey lighten-4"
-            min-width="160"
-            max-width="250"
-            slot-scope="{ hover }"
+            :color="chosedColor"
             hover
+            min-width="240"
+            max-width="260"
+            slot-scope="{ hover }"
           >
-            <v-img :aspect-ratio="15/14" :src="item.avatar">
-              <v-expand-transition>
-                <div
-                  class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-1 white--text"
-                  style="height: 100%;"
-                  v-if="hover"
-                >{{item.name}}</div>
-              </v-expand-transition>
-            </v-img>
-            <v-card-text style="position: relative;">
-              <div class="title font-weight-light orange--text mb-1">{{item.telephone}}</div>
-            </v-card-text>
+            <v-layout column align-center>
+              <v-avatar size="120" class="my-3 center">
+                <img :src="item.avatar">
+                <v-expand-transition>
+                  <div
+                    class="d-flex fade-transition orange darken-2 v-card--reveal headline white--text"
+                    style="height: 100%;"
+                    v-if="hover"
+                  >{{item.age}}岁</div>
+                </v-expand-transition>
+              </v-avatar>
+            </v-layout>
+            <v-card-text class="headline text-md-center py-0">{{item.name}}</v-card-text>
+            <v-card-text class="text-md-center pt-1 pb-4">{{item.telephone}}</v-card-text>
           </v-card>
         </v-hover>
       </v-flex>
@@ -46,7 +50,8 @@ export default {
         telephone: "",
         gender: "",
         age: "",
-        avatar: ""
+        avatar: "",
+        color: ""
       },
       headers: [
         {
@@ -63,8 +68,16 @@ export default {
         rowsPerPage: 25 // -1 for All",
       },
       items: [],
+      randomColorItems: [],
       commonRules: [v => !!v || "This is required"],
-      actions: {}
+      actions: {},
+      randomColor: [
+        "green darken-1",
+        "yellow darken-2",
+        "cyan darken-3",
+        "blue-grey darken-1"
+      ],
+      chosedColor: ""
     };
   },
   created: () => {},
@@ -89,10 +102,17 @@ export default {
         .finally(() => {
           this.snackbar = true;
         });
+    },
+    getRandomColor() {
+      var index = Math.floor(Math.random() * this.randomColor.length);
+      this.chosedColor = this.randomColor[index];
+      // this.randomColor.splice(index, 1);
+      return this.chosedColor;
     }
   },
   mounted() {
     this.getItemList();
+    this.getRandomColor();
   }
 };
 </script>
@@ -100,9 +120,10 @@ export default {
 <style scoped>
 .v-card--reveal {
   align-items: center;
+  border-radius: 50%;
   bottom: 0;
   justify-content: center;
-  opacity: 0.5;
+  opacity: 0.6;
   position: absolute;
   width: 100%;
 }
