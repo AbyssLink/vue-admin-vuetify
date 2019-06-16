@@ -4,11 +4,11 @@
 
 ### 运行截图
 
-![商品页](/Users/chengjingze/Desktop/Screenshot 2019-06-16 at 5.18.59 PM.png)
+![商品页](http://ww3.sinaimg.cn/large/006tNc79ly1g4383h5urdj31bf0u0to1.jpg)
 
-![用户页](/Users/chengjingze/Desktop/Screenshot 2019-06-16 at 5.19.11 PM.png)
+![用户页](http://ww2.sinaimg.cn/large/006tNc79ly1g4383g2legj31bf0u0wqd.jpg)
 
-![商品列表](/Users/chengjingze/Desktop/Screenshot 2019-06-16 at 5.18.35 PM.png)
+![商品列表](http://ww2.sinaimg.cn/large/006tNc79ly1g4383diiogj31bf0u0aj9.jpg)
 
 ### 项目构建
 
@@ -325,7 +325,7 @@ export default {
 
 后端表结构:
 
-![Screenshot 2019-06-04 at 8.09.32 AM](/Users/chengjingze/Desktop/Screenshot 2019-06-04 at 8.09.32 AM.png)
+![Screenshot 2019-06-04 at 8.09.32 AM](http://ww2.sinaimg.cn/large/006tNc79ly1g4383e8hn4j30u00wxgth.jpg)
 
 
 
@@ -359,4 +359,4 @@ export default {
 
 ### Git log
 
-![Screenshot 2019-06-16 at 5.33.21 PM](/Users/chengjingze/Desktop/Screenshot 2019-06-16 at 5.33.21 PM.png)
+![Screenshot 2019-06-16 at 5.33.21 PM](http://ww1.sinaimg.cn/large/006tNc79ly1g4383f8krzj31xo0u0n78.jpg)
