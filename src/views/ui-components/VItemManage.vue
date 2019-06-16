@@ -217,10 +217,3 @@ export default {
   }
 };
 </script>
-
-<style>
-/* This is for documentation purposes and will not be needed in your application */
-/* #v-btn-add {
-  margin: 0px 0px 80px 20px;
-} */
-</style>
