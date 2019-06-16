@@ -136,10 +136,15 @@ export default {
       if (!this.user || route.meta.hidden) {
         return false;
       }
-
+      console.log("route----->role", route);
       const { auth } = route.meta;
+      console.log(auth);
       return auth
-        ? (!auth.length && !this.user.role) || auth.includes(this.user.role)
+        ? (!auth.length &&
+            !JSON.parse(localStorage.getItem("LOGIN_USER")).thirdPartyId) ||
+            auth.includes(
+              JSON.parse(localStorage.getItem("LOGIN_USER")).thirdPartyId
+            )
         : !auth;
     },
     toggleSidebar() {

@@ -17,6 +17,7 @@
         <td class="text-xs-left">{{ props.item.telephone }}</td>
         <td class="text-xs-left">{{ props.item.gender }}</td>
         <td class="text-xs-left">{{ props.item.age }}</td>
+        <td class="text-xs-left">{{ props.item.thirdPartyId }}</td>
         <td class="justify-center layout px-0">
           <v-btn icon class="mx-0" @click="editItem(props.item)">
             <v-icon color="teal">edit</v-icon>
@@ -163,7 +164,8 @@ export default {
         { text: "name", value: "name" },
         { text: "telephone", value: "telephone" },
         { text: "gender", value: "gender" },
-        { text: "age", value: "age" }
+        { text: "age", value: "age" },
+        { text: "role", value: "role" }
       ],
       pagination: {
         rowsPerPage: 25 // -1 for All",

@@ -113,7 +113,7 @@ export default {
           if (response.data.status == "success") {
             this.message = "删除成功, id = " + this.orderInfo.id;
             this.orders.splice(this.orders.indexOf(this.orderInfo), 1); //删除前端数据对应项
-            Snackbar.info(this.message);
+            Snackbar.warning(this.message);
           } else {
             this.message = "删除失败，原因为" + response.data.data.errMsg;
             Snackbar.error(this.message);

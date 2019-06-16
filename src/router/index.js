@@ -76,12 +76,17 @@ export default new Router({
       path: '/admin',
       component: LayoutWithoutSidebar,
       redirect: { name: 'Admin' },
+      meta: {
+        auth: ['admin'],
+      },
       children: [
         {
           path: '/admin',
           name: 'Admin',
           component: () => import('@/views/admin/VHomepage.vue'),
-          meta: {},
+          meta: {
+            auth: ['admin'],
+          },
         },
       ],
     },

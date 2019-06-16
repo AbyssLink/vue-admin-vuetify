@@ -10,7 +10,7 @@
       <v-spacer></v-spacer>
 
       <!-- menu -->
-      <navbar-menu/>
+      <!-- <navbar-menu/> -->
 
       <v-spacer></v-spacer>
 

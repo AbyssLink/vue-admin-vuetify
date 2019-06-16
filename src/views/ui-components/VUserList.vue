@@ -22,11 +22,12 @@
                     class="d-flex fade-transition orange darken-2 v-card--reveal headline white--text"
                     style="height: 100%;"
                     v-if="hover"
-                  >{{item.age}}岁</div>
+                  >{{item.thirdPartyId}}</div>
                 </v-expand-transition>
               </v-avatar>
             </v-layout>
             <v-card-text class="headline text-md-center py-0">{{item.name}}</v-card-text>
+            <v-card-text class="title font-weight-light text-md-center py-0">{{item.age}}岁</v-card-text>
             <v-card-text class="text-md-center pt-1 pb-4">{{item.telephone}}</v-card-text>
           </v-card>
         </v-hover>
@@ -52,20 +53,6 @@ export default {
         age: "",
         avatar: "",
         color: ""
-      },
-      headers: [
-        {
-          text: "name",
-          align: "left",
-          sortable: false,
-          value: "name"
-        },
-        { text: "telephone", value: "telephone" },
-        { text: "gender", value: "gender" },
-        { text: "age", value: "age" }
-      ],
-      pagination: {
-        rowsPerPage: 25 // -1 for All",
       },
       items: [],
       randomColorItems: [],

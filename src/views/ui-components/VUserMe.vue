@@ -21,6 +21,7 @@
             </v-flex>
           </v-layout>
           <v-text-field label="TELEPHONE" :placeholder="user.telephone"></v-text-field>
+          <v-text-field label="ROLE" disabled :placeholder="user.thirdPartyId"></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
