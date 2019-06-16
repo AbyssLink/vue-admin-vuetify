@@ -125,7 +125,7 @@ export default {
       user: {}
     };
   },
-/*   computed: {
+  /*   computed: {
     ...mapState({
       user: state => state.auth.me
     })
@@ -136,7 +136,10 @@ export default {
     },
     logout() {
       console.log("logout");
+      localStorage.removeItem("LOGIN_USER"); //移除登陆用户信息
       this.$router.push({ name: "Login" });
+      this.$router.go(0); // 刷新了整个页面, 相当于 window.location.reload() 或 F5
+      // this.$router.replace("/login"); // 刷新路由
     },
     getUserInfo() {
       this.user = JSON.parse(localStorage.getItem("LOGIN_USER"));

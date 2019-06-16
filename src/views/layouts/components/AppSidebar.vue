@@ -73,8 +73,7 @@ export default {
       // miniVariant: true,
       ps: null,
       clipped: true,
-      temporary: false,
-      role: ""
+      temporary: false
     };
   },
   watch: {
@@ -92,21 +91,20 @@ export default {
       const routeName = this.$route.name;
       const { routes } = this.$router.options;
 
+      console.log("---route", routes);
+
       try {
         for (let i = 0, len = routes.length; i < len; i += 1) {
           if (routes[i].children) {
-            for (let j = 0, len = routes[i].children.length; j < len; j += 1) {
+            let j = routes[i].children.length;
+            while (j--) {
               const child = routes[i].children[j];
+              console.log("---child", child);
               if (child.children) {
-                for (
-                  let k = 0, size = child.children.length;
-                  k < size;
-                  k += 1
-                ) {
+                let k = child.children.length;
+                while (k--) {
                   const subChild = child.children[k];
-                  // console.log("subChild -->")
-                  // console.log(subChild);
-                  if (subChild.meta.hidden == true) {
+                  if (subChild.meta.hidden === true) {
                     child.children.splice(k, 1); //删除不显示的路由项
                   }
                 }
@@ -128,7 +126,7 @@ export default {
   },
   methods: {
     roleShow(route) {
-      console.log("---route", route);
+      // console.log("---route", route);
 
       // hack, there is no user when logout
       if (!route.meta) {
@@ -141,7 +139,7 @@ export default {
 
       const { auth } = route.meta;
       return auth
-        ? (!auth.length && !this.role) || auth.includes(this.user.role)
+        ? (!auth.length && !this.user.role) || auth.includes(this.user.role)
         : !auth;
     },
     toggleSidebar() {
@@ -163,17 +161,18 @@ export default {
       return title ? this.$t(`sidebar.${fistLowerUpper(title)}`) : "";
     },
     getFilterRouteChild: function(route) {
-      for (let i = 0; i < route.children.length; i++) {
-        this.role = JSON.parse(localStorage.getItem("LOGIN_USER")).thirdPartyId;
+      let i = route.children.length;
+      while (i--) {
         if (
           route.children[i].meta.auth &&
-          !route.children[i].meta.auth.includes(this.role)
+          !route.children[i].meta.auth.includes(
+            JSON.parse(localStorage.getItem("LOGIN_USER")).thirdPartyId
+          )
         ) {
-          console.log(route.children[i].meta.auth);
-          console.log(route.children[i].meta.auth.includes(this.role));
           route.children.splice(i, 1); //删除无权限的路由项
         }
       }
+      // console.log(route.children);
       return route.children;
     }
   },

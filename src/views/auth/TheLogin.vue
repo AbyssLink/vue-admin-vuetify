@@ -85,7 +85,7 @@ export default {
             localStorage.setItem("LOGIN_USER", JSON.stringify(userFullInfo));
 
             this.loginLoading = true;
-            this.message = "登陆成功, 正在跳转页面...";
+            this.message = "登陆成功";
             Snackbar.success(this.message);
             this.loginLoading = false;
             this.$router.push({ name: "Index" });
