@@ -7,7 +7,13 @@
       class="elevation-1"
     >
       <template v-slot:items="props">
+        <td @click="getItemDetail(props.item.id)">{{ props.item.id }}</td>
         <td @click="getItemDetail(props.item.id)">{{ props.item.title }}</td>
+        <td>
+          <v-avatar size="50" tile style="margin:5px">
+            <img :src="props.item.imgUrl">
+          </v-avatar>
+        </td>
         <td class="text-xs-left">{{ props.item.price }}</td>
         <td class="text-xs-left">{{ props.item.stock }}</td>
         <td class="text-xs-left">{{ props.item.sales }}</td>
@@ -119,11 +125,11 @@ export default {
       },
       headers: [
         {
-          text: "title",
+          text: "id",
           align: "left",
-          sortable: false,
-          value: "title"
+          value: "id"
         },
+        { text: "title", value: "title" },
         { text: "price (rmb)", value: "price" },
         { text: "stock", value: "stock" },
         { text: "sales", value: "sales" },
@@ -192,7 +198,7 @@ export default {
           if (response.data.status == "success") {
             this.message = "删除成功, id = " + this.itemInfo.id;
             this.items.splice(this.items.indexOf(this.itemInfo), 1); //删除前端数据对应项
-            Snackbar.info(this.message);
+            Snackbar.warning(this.message);
           } else {
             this.message = "删除失败，原因为" + response.data.data.errMsg;
             Snackbar.error(this.message);

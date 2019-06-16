@@ -20,20 +20,10 @@ const routes = {
       path: 'manage',
       name: '商品管理',
       component: () => import('@/views/ui-components/VItemManage.vue'),
-      meta: {},
+      meta: {
+        auth: ['admin'],
+      },
     },
-    // {
-    //   path: 'chips',
-    //   name: '订单管理',
-    //   component: () => import('@/views/ui-components/VChips'),
-    //   meta: {},
-    // },
-    // {
-    //   path: 'bottom-sheets',
-    //   name: '用户管理',
-    //   component: () => import('@/views/ui-components/VBottomSheets.vue'),
-    //   meta: {},
-    // },
     {
       path: 'detail',
       name: '商品详情',

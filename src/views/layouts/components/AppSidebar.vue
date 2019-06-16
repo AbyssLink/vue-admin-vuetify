@@ -27,7 +27,7 @@
             </v-list-tile>
             <v-list-tile
               ripple
-              v-for="(cRoute, idx) in route.children"
+              v-for="(cRoute, idx) in getFilterRouteChild(route)"
               :to="{ name: cRoute.name }"
               :key="idx"
             >
@@ -73,7 +73,8 @@ export default {
       // miniVariant: true,
       ps: null,
       clipped: true,
-      temporary: false
+      temporary: false,
+      role: ""
     };
   },
   watch: {
@@ -140,7 +141,7 @@ export default {
 
       const { auth } = route.meta;
       return auth
-        ? (!auth.length && !this.user.role) || auth.includes(this.user.role)
+        ? (!auth.length && !this.role) || auth.includes(this.user.role)
         : !auth;
     },
     toggleSidebar() {
@@ -150,11 +151,30 @@ export default {
       this.temporary = val;
     },
     generateTitle(title, route) {
-      if (route && (route.name === "Item" || route.name === "Order" || route.name === "User")) {
+      if (
+        route &&
+        (route.name === "Item" ||
+          route.name === "Order" ||
+          route.name === "User")
+      ) {
         return title;
       }
 
       return title ? this.$t(`sidebar.${fistLowerUpper(title)}`) : "";
+    },
+    getFilterRouteChild: function(route) {
+      for (let i = 0; i < route.children.length; i++) {
+        this.role = JSON.parse(localStorage.getItem("LOGIN_USER")).thirdPartyId;
+        if (
+          route.children[i].meta.auth &&
+          !route.children[i].meta.auth.includes(this.role)
+        ) {
+          console.log(route.children[i].meta.auth);
+          console.log(route.children[i].meta.auth.includes(this.role));
+          route.children.splice(i, 1); //删除无权限的路由项
+        }
+      }
+      return route.children;
     }
   },
   created() {
@@ -169,6 +189,7 @@ export default {
   beforeDestroy() {
     this.ps.destroy();
     this.ps = null;
-  }
+  },
+  mounted() {}
 };
 </script>

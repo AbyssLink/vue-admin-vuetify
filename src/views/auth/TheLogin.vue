@@ -81,7 +81,7 @@ export default {
         .then(response => {
           if (response.data.status == "success") {
             // 存储登陆信息在客户端浏览器中
-            var userFullInfo = response.data.data;
+            let userFullInfo = response.data.data;
             localStorage.setItem("LOGIN_USER", JSON.stringify(userFullInfo));
 
             this.loginLoading = true;

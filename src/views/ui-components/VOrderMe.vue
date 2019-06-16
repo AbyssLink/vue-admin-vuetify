@@ -7,9 +7,12 @@
       class="elevation-1"
     >
       <template v-slot:items="props">
-        <td>{{ props.item.id }}</td>
-        <td class="text-xs-left">{{ props.item.itemId }}</td>
-        <td class="text-xs-left">{{ props.item.userId }}</td>
+        <td class="text-xs-left">{{ props.item.itemName }}</td>
+        <td>
+          <v-avatar size="50" tile style="margin:5px">
+            <img :src="props.item.itemUrl">
+          </v-avatar>
+        </td>
         <td class="text-xs-left">{{ props.item.itemPrice }}</td>
         <td class="text-xs-left">{{ props.item.amount }}</td>
         <td class="text-xs-left">{{ props.item.orderPrice }}</td>
@@ -52,20 +55,17 @@ export default {
       orderInfo: {
         id: "",
         itemId: "",
-        userId: "",
         itemPrice: "",
         amount: "",
         orderPrice: ""
       },
       headers: [
         {
-          text: "orderId",
+          text: "itemImage",
           align: "left",
-          sortable: false,
-          value: "id"
+          value: "itemUrl"
         },
-        { text: "itemId", value: "itemId" },
-        { text: "userId", value: "userId" },
+        { text: "itemName", value: "itemName" },
         { text: "item price (rmb)", value: "itemPrice" },
         { text: "amount", value: "amount" },
         { text: "order price (rmb)", value: "orderPrice" }
@@ -81,7 +81,10 @@ export default {
   methods: {
     getOrderList() {
       Vue.prototype.$http
-        .get("http://localhost:8088/order/list")
+        .get(
+          "http://localhost:8088/order/listbyuser?id=" +
+            JSON.parse(localStorage.getItem("LOGIN_USER")).id
+        )
         .then(response => {
           if (response.data.status == "success") {
             this.message = "获取订单列表成功";
@@ -110,7 +113,7 @@ export default {
           if (response.data.status == "success") {
             this.message = "删除成功, id = " + this.orderInfo.id;
             this.orders.splice(this.orders.indexOf(this.orderInfo), 1); //删除前端数据对应项
-            Snackbar.warning(this.message);
+            Snackbar.info(this.message);
           } else {
             this.message = "删除失败，原因为" + response.data.data.errMsg;
             Snackbar.error(this.message);

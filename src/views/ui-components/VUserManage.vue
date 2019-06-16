@@ -7,7 +7,13 @@
       class="elevation-1"
     >
       <template v-slot:items="props">
-        <td>{{ props.item.name }}</td>
+        <td>{{ props.item.id }}</td>
+        <td>
+          <v-avatar size="40" style="margin:5px;">
+            <img :src="props.item.avatar">
+          </v-avatar>
+        </td>
+        <td class="text-xs-left">{{ props.item.name }}</td>
         <td class="text-xs-left">{{ props.item.telephone }}</td>
         <td class="text-xs-left">{{ props.item.gender }}</td>
         <td class="text-xs-left">{{ props.item.age }}</td>
@@ -140,6 +146,7 @@ export default {
       dialog1: false,
       message: "",
       userInfo: {
+        id: "",
         name: "",
         telephone: "",
         gender: "",
@@ -148,11 +155,12 @@ export default {
       },
       headers: [
         {
-          text: "name",
+          text: "id",
           align: "left",
-          sortable: false,
-          value: "name"
+          value: "id"
         },
+        { text: "avatar", value: "avatar" },
+        { text: "name", value: "name" },
         { text: "telephone", value: "telephone" },
         { text: "gender", value: "gender" },
         { text: "age", value: "age" }
@@ -201,7 +209,7 @@ export default {
           if (response.data.status == "success") {
             this.message = "删除成功, id = " + this.userInfo.id;
             this.users.splice(this.users.indexOf(this.userInfo), 1); //删除前端数据对应项
-            Snackbar.info(this.message);
+            Snackbar.warning(this.message);
           } else {
             this.message = "删除失败，原因为" + response.data.data.errMsg;
             Snackbar.error(this.message);
