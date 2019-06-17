@@ -158,7 +158,8 @@ export default {
         route &&
         (route.name === "Item" ||
           route.name === "Order" ||
-          route.name === "User")
+          route.name === "User" ||
+          route.name === "Comment")
       ) {
         return title;
       }
