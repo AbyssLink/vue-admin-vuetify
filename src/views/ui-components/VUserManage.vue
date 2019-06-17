@@ -133,6 +133,82 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialog2" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Item Information</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12>
+                <v-form ref="form">
+                  <v-text-field
+                    v-model="userInfo.name"
+                    prepend-icon="person"
+                    name="name"
+                    :rules="commonRules"
+                    label="name"
+                    id="name"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.telephone"
+                    prepend-icon="phone"
+                    :rules="commonRules"
+                    name="telephone"
+                    label="telephone"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.gender"
+                    prepend-icon="group"
+                    name="gender"
+                    :rules="commonRules"
+                    label="gender"
+                    id="gender"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.age"
+                    prepend-icon="cake"
+                    name="age"
+                    :rules="commonRules"
+                    label="age"
+                    id="age"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.avatar"
+                    prepend-icon="face"
+                    name="avatar"
+                    :rules="commonRules"
+                    label="avatar"
+                    id="avatar"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.thirdPartyId"
+                    prepend-icon="accessibility"
+                    name="role"
+                    disabled
+                    :rules="commonRules"
+                    label="role"
+                    id="role"
+                    type="text"
+                  ></v-text-field>
+                </v-form>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="grey darken-1" flat @click="dialog2 = false">Close</v-btn>
+          <v-btn color="blue darken-1" flat @click="confirmEdit">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -145,6 +221,7 @@ export default {
     return {
       dialog: false,
       dialog1: false,
+      dialog2: false,
       message: "",
       userInfo: {
         id: "",
@@ -152,7 +229,8 @@ export default {
         telephone: "",
         gender: "",
         age: "",
-        avatar: ""
+        avatar: "",
+        thirdPartyId: ""
       },
       headers: [
         {
@@ -184,7 +262,7 @@ export default {
           if (response.data.status == "success") {
             this.message = "获取用户信息成功";
             this.users = response.data.data;
-            Snackbar.info(this.message);
+            // Snackbar.info(this.message);
           } else {
             this.message =
               "获取用户信息失败，原因为" + response.data.data.errMsg;
@@ -222,7 +300,28 @@ export default {
         });
     },
     editItem(item) {
-      Snackbar.info("开发中，请等待……");
+      this.dialog2 = true;
+      this.userInfo = item;
+    },
+    confirmEdit() {
+      this.dialog2 = false;
+
+      Vue.prototype.$http
+        .post("http://localhost:8088/user/edit", this.userInfo)
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "修改用户信息成功, id=" + this.userInfo.id;
+            Snackbar.success(this.message);
+          } else {
+            this.message =
+              "修改用户信息失败，原因为" + response.data.data.errMsg;
+            Snackbar.error(this.message);
+          }
+        })
+        .catch(error => {
+          Snackbar.error(error);
+          console.log(error);
+        });
     },
     getOtp() {
       Vue.prototype.$http

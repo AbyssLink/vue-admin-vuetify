@@ -28,6 +28,7 @@
         </td>
       </template>
     </v-data-table>
+    <!-- 删除提示框 -->
     <v-dialog v-model="dialog" max-width="360">
       <v-card>
         <v-card-title class="headline orange white--text">WARNING</v-card-title>
@@ -43,6 +44,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- 创建商品表单对话框 -->
     <v-dialog v-model="dialog1" persistent max-width="600px">
       <template v-slot:activator="{ on }">
         <v-layout row justify-center>
@@ -59,7 +61,7 @@
               <v-flex xs12>
                 <v-form ref="form">
                   <v-text-field
-                    :counter="11"
+                    :counter="25"
                     :rules="commonRules"
                     label="title"
                     required
@@ -101,6 +103,65 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- 更新商品表单对话框 -->
+    <v-dialog v-model="dialog2" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Item Information</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12>
+                <v-form ref="form">
+                  <v-text-field
+                    :counter="25"
+                    :rules="commonRules"
+                    :value="itemInfo.title"
+                    label="title"
+                    required
+                    v-model="itemInfo.title"
+                  ></v-text-field>
+                  <v-text-field
+                    :rules="commonRules"
+                    :value="itemInfo.description"
+                    label="description"
+                    required
+                    v-model="itemInfo.description"
+                  ></v-text-field>
+                  <v-text-field
+                    :rules="commonRules"
+                    :value="itemInfo.price"
+                    label="price"
+                    required
+                    v-model="itemInfo.price"
+                  ></v-text-field>
+                  <v-text-field
+                    :rules="commonRules"
+                    :value="itemInfo.stock"
+                    label="stock"
+                    required
+                    v-model="itemInfo.stock"
+                  ></v-text-field>
+                  <v-text-field
+                    :rules="commonRules"
+                    :value="itemInfo.imgUrl"
+                    label="imgUrl"
+                    required
+                    v-model="itemInfo.imgUrl"
+                  ></v-text-field>
+                </v-form>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="dialog2 = false">Close</v-btn>
+          <v-btn color="blue darken-1" flat @click="confirmEdit">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -113,6 +174,7 @@ export default {
     return {
       dialog: false,
       dialog1: false,
+      dialog2: false,
       message: "",
       itemInfo: {
         id: "",
@@ -130,6 +192,7 @@ export default {
           value: "id"
         },
         { text: "title", value: "title" },
+        { text: "image", value: "image" },
         { text: "price (rmb)", value: "price" },
         { text: "stock", value: "stock" },
         { text: "sales", value: "sales" },
@@ -152,7 +215,7 @@ export default {
           if (response.data.status == "success") {
             this.message = "获取商品列表成功";
             this.items = response.data.data;
-            Snackbar.info(this.message);
+            // Snackbar.info(this.message);
           } else {
             this.message =
               "获取商品列表失败，原因为" + response.data.data.errMsg;
@@ -209,7 +272,28 @@ export default {
         });
     },
     editItem(item) {
-      Snackbar.info("开发中，请等待……");
+      this.dialog2 = true;
+      this.itemInfo = item;
+    },
+    confirmEdit() {
+      this.dialog2 = false;
+
+      Vue.prototype.$http
+        .post("http://localhost:8088/item/edit", this.itemInfo)
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "修改商品信息成功, id=" + this.itemInfo.id;
+            Snackbar.success(this.message);
+          } else {
+            this.message =
+              "修改商品信息失败，原因为" + response.data.data.errMsg;
+            Snackbar.error(this.message);
+          }
+        })
+        .catch(error => {
+          Snackbar.error(error);
+          console.log(error);
+        });
     }
   },
   mounted() {

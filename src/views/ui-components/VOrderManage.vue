@@ -86,7 +86,7 @@ export default {
           if (response.data.status == "success") {
             this.message = "获取订单列表成功";
             this.orders = response.data.data;
-            Snackbar.info(this.message);
+            // Snackbar.info(this.message);
           } else {
             this.message =
               "获取订单列表失败，原因为" + response.data.data.errMsg;

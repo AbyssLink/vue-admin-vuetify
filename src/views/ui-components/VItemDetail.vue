@@ -135,7 +135,7 @@ export default {
           if (response.data.status == "success") {
             this.message = "获取商品信息成功";
             this.itemInfo = response.data.data;
-            Snackbar.info(this.message);
+            // Snackbar.info(this.message);
           } else {
             this.message =
               "获取商品信息失败，原因为" + response.data.data.errMsg;

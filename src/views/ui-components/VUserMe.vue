@@ -9,44 +9,81 @@
           style="background:white;width:456px;margin-left:56px;padding:34px;"
         >
           <v-avatar size="85" class="mb-3" style="margin-top:-60px">
-            <img :src="user.avatar">
+            <img :src="userInfo.avatar">
           </v-avatar>
-          <v-text-field class="mt-4" label="USERNAME" :placeholder="user.name"></v-text-field>
+          <v-text-field
+            class="mt-4"
+            label="USERNAME"
+            :value="userInfo.name"
+            v-model="userInfo.name"
+          ></v-text-field>
           <v-layout>
             <v-flex xs6>
-              <v-text-field label="AGE" :placeholder="getString(user.age)"></v-text-field>
+              <v-text-field label="AGE" :value="userInfo.age" v-model="userInfo.age"></v-text-field>
             </v-flex>
             <v-flex xs6>
-              <v-text-field label="GENDER" :placeholder="getString(user.gender)"></v-text-field>
+              <v-text-field label="GENDER" :value="userInfo.gender" v-model="userInfo.gender"></v-text-field>
             </v-flex>
           </v-layout>
-          <v-text-field label="TELEPHONE" :placeholder="user.telephone"></v-text-field>
-          <v-text-field label="ROLE" disabled :placeholder="user.thirdPartyId"></v-text-field>
+          <v-text-field label="TELEPHONE" :value="userInfo.telephone" v-model="userInfo.telephone"></v-text-field>
+          <v-text-field label="AVATAR" :value="userInfo.avatar" v-model="userInfo.avatar"></v-text-field>
+          <v-text-field
+            label="ROLE"
+            disabled
+            :value="user.thirdPartyId"
+            v-model="userInfo.thirdPartyId"
+          ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn flat color="white">Cancle</v-btn>
-          <v-btn flat color="white">Save</v-btn>
+          <v-btn flat color="white" @click="editUserInfo">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-layout>
   </v-container>
 </template>
 <script>
+import Vue from "vue";
+import Snackbar from "../../components/snackbar/index";
+
 export default {
   data() {
     return {
       display: true,
-      user: {}
+      user: {},
+      userInfo: {
+        id: "",
+        name: "",
+        age: "",
+        gender: "",
+        telephone: "",
+        avatar: ""
+      }
     };
   },
   methods: {
     getUserInfo() {
-      this.user = JSON.parse(localStorage.getItem("LOGIN_USER"));
+      this.userInfo = JSON.parse(localStorage.getItem("LOGIN_USER"));
       console.log(this.user);
     },
-    getString(value) {
-      return value + "";
+    editUserInfo() {
+      Vue.prototype.$http
+        .post("http://localhost:8088/user/edit", this.userInfo)
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "保存个人信息成功";
+            Snackbar.success(this.message);
+          } else {
+            this.message =
+              "保存个人信息失败，原因为" + response.data.data.errMsg;
+            Snackbar.error(this.message);
+          }
+        })
+        .catch(error => {
+          Snackbar.error(error);
+          console.log(error);
+        });
     }
   },
   mounted() {
