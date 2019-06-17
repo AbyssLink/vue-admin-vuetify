@@ -1,4 +1,5 @@
 <template>
+  <!-- 卡片-用户个人信息 -->
   <v-container>
     <v-layout align-center justify-center>
       <v-card class="elevation-24" v-if="display" max-width="474" color="primary">

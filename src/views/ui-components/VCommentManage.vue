@@ -1,40 +1,90 @@
 <template>
   <v-app>
-    <v-data-table
-      :headers="headers"
-      :items="orders"
-      :pagination.sync="pagination"
-      class="elevation-1"
-    >
-      <template v-slot:items="props">
-        <td>{{ props.item.id }}</td>
-        <td class="text-xs-left">{{ props.item.itemId }}</td>
-        <td class="text-xs-left">{{ props.item.userId }}</td>
-        <td class="text-xs-left">{{ props.item.title }}</td>
-        <td class="text-xs-left">{{ props.item.content }}</td>
-        <td class="text-xs-left">{{ props.item.name }}</td>
-        <td class="text-xs-left">{{ props.item.avatar }}</td>
-        <td class="justify-center layout">
-          <v-btn icon class="mx-0" @click="editItem(props.item)">
-            <v-icon color="teal">edit</v-icon>
-          </v-btn>
-          <v-btn icon class="mx-0" @click.stop="deleteItem(props.item)">
-            <v-icon color="pink">delete</v-icon>
-          </v-btn>
-        </td>
-      </template>
-    </v-data-table>
+    <!-- 列表-全部评论 -->
+    <v-card>
+      <v-card-title>
+        My comments
+        <v-spacer></v-spacer>
+        <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+      </v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="orders"
+        :search="search"
+        :pagination.sync="pagination"
+        class="elevation-1"
+      >
+        <template v-slot:items="props">
+          <td>{{ props.item.id }}</td>
+          <td class="text-xs-left">{{ props.item.itemId }}</td>
+          <td class="text-xs-left">{{ props.item.userId }}</td>
+          <td class="text-xs-left">{{ props.item.title }}</td>
+          <td class="text-xs-left">{{ props.item.content }}</td>
+          <td class="text-xs-left">{{ props.item.name }}</td>
+          <td>
+            <v-avatar size="40" style="margin:5px;">
+              <img :src="props.item.avatar">
+            </v-avatar>
+          </td>
+          <td class="justify-center layout">
+            <v-btn icon class="mx-0" @click="editItem(props.item)">
+              <v-icon color="teal">edit</v-icon>
+            </v-btn>
+            <v-btn icon class="mx-0" @click.stop="deleteItem(props.item)">
+              <v-icon color="pink">delete</v-icon>
+            </v-btn>
+          </td>
+        </template>
+      </v-data-table>
+    </v-card>
+    <!-- 对话框-确认删除 -->
     <v-dialog v-model="dialog" max-width="360">
       <v-card>
         <v-card-title class="headline orange white--text">WARNING</v-card-title>
         <v-card-text class="mb-2 font-weight-light">
-          Confirm to delete?
-          <br>Deleted item CANNOT be recovered.
+          确定删除吗？
+          <br>该操作不可恢复
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat="flat" @click="dialog = false">Cancle</v-btn>
           <v-btn color="grey darken-1" flat="flat" @click="confirmDelete()">Confirm</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- 对话框-更新评论表单 -->
+    <v-dialog v-model="dialog1" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Edit Comment</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12>
+                <v-form ref="form">
+                  <v-text-field
+                    :counter="25"
+                    :rules="commonRules"
+                    label="title"
+                    required
+                    v-model="itemInfo.title"
+                  ></v-text-field>
+                  <v-textarea
+                    :rules="commonRules"
+                    label="content"
+                    required
+                    v-model="itemInfo.content"
+                  ></v-textarea>
+                </v-form>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="dialog1 = false">Close</v-btn>
+          <v-btn color="blue darken-1" flat @click="confirmEditComment">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -49,6 +99,8 @@ export default {
   data() {
     return {
       dialog: false,
+      dialog1: false,
+      search: "",
       message: "",
       itemInfo: {
         id: "",
@@ -73,7 +125,7 @@ export default {
         { text: "avatar", value: "avatar" }
       ],
       pagination: {
-        rowsPerPage: 25 // -1 for All",
+        rowsPerPage: 25 // -1 for All,
       },
       orders: [],
       commonRules: [v => !!v || "This is required"]
@@ -123,7 +175,28 @@ export default {
         });
     },
     editItem(item) {
-      Snackbar.info("开发中，请等待……");
+      this.dialog1 = true;
+      this.itemInfo = item;
+    },
+    confirmEditComment() {
+      this.dialog1 = false;
+
+      console.log(this.itemInfo);
+
+      Vue.prototype.$http
+        .post("http://localhost:8088/comment/update", this.itemInfo)
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "更新评论成功!";
+            Snackbar.success(this.message);
+          } else {
+            this.message = "更新评论失败，原因为: " + response.data.data.errMsg;
+            Snackbar.error(this.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
   mounted() {

@@ -1,34 +1,45 @@
 <template>
   <v-app>
-    <v-data-table
-      :headers="headers"
-      :items="orders"
-      :pagination.sync="pagination"
-      class="elevation-1"
-    >
-      <template v-slot:items="props">
-        <td>{{ props.item.id }}</td>
-        <td class="text-xs-left">{{ props.item.itemId }}</td>
-        <td class="text-xs-left">{{ props.item.userId }}</td>
-        <td class="text-xs-left">{{ props.item.itemPrice }}</td>
-        <td class="text-xs-left">{{ props.item.amount }}</td>
-        <td class="text-xs-left">{{ props.item.orderPrice }}</td>
-        <td class="justify-center layout">
-          <v-btn icon class="mx-0" @click="editItem(props.item)">
-            <v-icon color="teal">edit</v-icon>
-          </v-btn>
-          <v-btn icon class="mx-0" @click.stop="deleteItem(props.item)">
-            <v-icon color="pink">delete</v-icon>
-          </v-btn>
-        </td>
-      </template>
-    </v-data-table>
+    <!-- 列表-全部订单 -->
+    <v-card>
+      <v-card-title>
+        All Orders
+        <v-spacer></v-spacer>
+        <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+      </v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="orders"
+        :search="search"
+        :pagination.sync="pagination"
+        class="elevation-1"
+      >
+        <template v-slot:items="props">
+          <td>{{ props.item.id }}</td>
+          <td class="text-xs-left">{{ props.item.itemId }}</td>
+          <td class="text-xs-left">{{ props.item.userId }}</td>
+          <td class="text-xs-left">{{ props.item.itemPrice }}</td>
+          <td class="text-xs-left">{{ props.item.amount }}</td>
+          <td class="text-xs-left">{{ props.item.orderPrice }}</td>
+          <td class="justify-center layout">
+            <v-btn icon class="mx-0" @click="editItem(props.item)">
+              <v-icon color="teal">edit</v-icon>
+            </v-btn>
+            <v-btn icon class="mx-0" @click.stop="deleteItem(props.item)">
+              <v-icon color="pink">delete</v-icon>
+            </v-btn>
+          </td>
+        </template>
+      </v-data-table>
+    </v-card>
+
+    <!-- 确认删除对话框 -->
     <v-dialog v-model="dialog" max-width="360">
       <v-card>
         <v-card-title class="headline orange white--text">WARNING</v-card-title>
         <v-card-text class="mb-2 font-weight-light">
-          Confirm to delete?
-          <br>Deleted item CANNOT be recovered.
+          确定删除吗？
+          <br>该操作不可恢复
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -49,6 +60,7 @@ export default {
     return {
       dialog: false,
       message: "",
+      search: "",
       orderInfo: {
         id: "",
         itemId: "",
@@ -71,7 +83,7 @@ export default {
         { text: "order price (rmb)", value: "orderPrice" }
       ],
       pagination: {
-        rowsPerPage: 25 // -1 for All",
+        rowsPerPage: 50 // -1 for All",
       },
       orders: [],
       commonRules: [v => !!v || "This is required"]

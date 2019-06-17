@@ -1,34 +1,49 @@
 <template>
-  <v-container fluid grid-list-xl>
-    <v-layout wrap justify-space-around>
-      <v-flex v-for="item in items" :key="item.id">
-        <v-hover>
-          <v-card
-            @click.native="getItemDetail(item.id)"
-            class="mx-auto"
-            color="grey lighten-4"
-            min-width="300"
-            max-width="380"
-            slot-scope="{ hover }"
-            hover
-          >
-            <v-img :aspect-ratio="15/14" :src="item.imgUrl">
-              <v-expand-transition>
-                <div
-                  class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
-                  style="height: 100%;"
-                  v-if="hover"
-                >{{item.price}} ¥</div>
-              </v-expand-transition>
-            </v-img>
-            <v-card-text style="position: relative;">
-              <div class="title font-weight-light orange--text mb-1">{{item.title}}</div>
-            </v-card-text>
-          </v-card>
-        </v-hover>
+  <v-app>
+    <!-- 搜索框-搜索商品 -->
+    <v-layout row justify-center>
+      <v-flex xs6>
+        <v-text-field
+          append-icon="mic"
+          flat
+          label="Search"
+          prepend-inner-icon="search"
+          v-model="search"
+        ></v-text-field>
       </v-flex>
     </v-layout>
-  </v-container>
+    <v-container fluid grid-list-xl>
+      <!-- 卡片列表-商品概览 -->
+      <v-layout wrap justify-space-around>
+        <v-flex v-for="item in searchData" :key="item.id">
+          <v-hover>
+            <v-card
+              @click.native="getItemDetail(item.id)"
+              class="mx-auto"
+              color="grey lighten-4"
+              min-width="300"
+              max-width="380"
+              slot-scope="{ hover }"
+              hover
+            >
+              <v-img :aspect-ratio="15/14" :src="item.imgUrl">
+                <v-expand-transition>
+                  <div
+                    class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
+                    style="height: 100%;"
+                    v-if="hover"
+                  >{{item.price}} ¥</div>
+                </v-expand-transition>
+              </v-img>
+              <v-card-text style="position: relative;">
+                <div class="title font-weight-light orange--text mb-1">{{item.title}}</div>
+              </v-card-text>
+            </v-card>
+          </v-hover>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-app>
 </template>
 
  <script>
@@ -39,6 +54,7 @@ export default {
   data() {
     return {
       message: "",
+      search: "",
       itemInfo: {
         id: "",
         title: "",
@@ -90,6 +106,24 @@ export default {
     getItemDetail(id) {
       this.$router.push({ name: "商品详情", query: { id: id } });
       // window.location.href = "detail?id=" + id;
+    }
+  },
+  computed: {
+    searchData: function() {
+      let search = this.search;
+
+      if (search) {
+        return this.items.filter(function(item) {
+          return Object.keys(item).some(function(key) {
+            return (
+              String(item[key])
+                .toLowerCase()
+                .indexOf(search) > -1
+            );
+          });
+        });
+      }
+      return this.items;
     }
   },
   mounted() {

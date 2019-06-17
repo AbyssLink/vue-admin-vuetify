@@ -1,41 +1,51 @@
 <template>
   <v-app>
-    <v-data-table
-      :headers="headers"
-      :items="items"
-      :pagination.sync="pagination"
-      class="elevation-1"
-    >
-      <template v-slot:items="props">
-        <td @click="getItemDetail(props.item.id)">{{ props.item.id }}</td>
-        <td @click="getItemDetail(props.item.id)">{{ props.item.title }}</td>
-        <td>
-          <v-avatar size="50" tile style="margin:5px">
-            <img :src="props.item.imgUrl">
-          </v-avatar>
-        </td>
-        <td class="text-xs-left">{{ props.item.price }}</td>
-        <td class="text-xs-left">{{ props.item.stock }}</td>
-        <td class="text-xs-left">{{ props.item.sales }}</td>
-        <td class="text-xs-left">{{ props.item.description }}</td>
-        <td class="justify-center layout px-0">
-          <v-btn icon class="mx-0" @click="editItem(props.item)">
-            <v-icon color="teal">edit</v-icon>
-          </v-btn>
-          <v-btn icon class="mx-0" @click="deleteItem(props.item)">
-            <v-icon color="pink">delete</v-icon>
-          </v-btn>
-        </td>
-      </template>
-    </v-data-table>
+    <!-- 列表-全部商品 -->
+    <v-card>
+      <v-card-title>
+        All Items
+        <v-spacer></v-spacer>
+        <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+      </v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="items"
+        :search="search"
+        :pagination.sync="pagination"
+        class="elevation-1"
+      >
+        <template v-slot:items="props">
+          <td @click="getItemDetail(props.item.id)">{{ props.item.id }}</td>
+          <td @click="getItemDetail(props.item.id)">{{ props.item.title }}</td>
+          <td>
+            <v-avatar size="50" tile style="margin:5px">
+              <img :src="props.item.imgUrl">
+            </v-avatar>
+          </td>
+          <td class="text-xs-left">{{ props.item.price }}</td>
+          <td class="text-xs-left">{{ props.item.stock }}</td>
+          <td class="text-xs-left">{{ props.item.sales }}</td>
+          <td class="text-xs-left">{{ props.item.description }}</td>
+          <td class="justify-center layout px-0">
+            <v-btn icon class="mx-0" @click="editItem(props.item)">
+              <v-icon color="teal">edit</v-icon>
+            </v-btn>
+            <v-btn icon class="mx-0" @click="deleteItem(props.item)">
+              <v-icon color="pink">delete</v-icon>
+            </v-btn>
+          </td>
+        </template>
+      </v-data-table>
+    </v-card>
+
     <!-- 删除提示框 -->
     <v-dialog v-model="dialog" max-width="360">
       <v-card>
         <v-card-title class="headline orange white--text">WARNING</v-card-title>
         <v-card-text class="mb-2 font-weight-light">
-          Confirm to delete?
-          <br>The related ORDERS will also be deleted.
-          <br>Deleted item CANNOT be recovered.
+          确定删除吗？
+          <br>和该商品相关的订单也将一并删除(相关评论不会删除)
+          <br>该操作不可恢复
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -175,6 +185,7 @@ export default {
       dialog: false,
       dialog1: false,
       dialog2: false,
+      search:"",
       message: "",
       itemInfo: {
         id: "",

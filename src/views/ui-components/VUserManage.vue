@@ -1,40 +1,50 @@
 <template>
   <v-app>
-    <v-data-table
-      :headers="headers"
-      :items="users"
-      :pagination.sync="pagination"
-      class="elevation-1"
-    >
-      <template v-slot:items="props">
-        <td>{{ props.item.id }}</td>
-        <td>
-          <v-avatar size="40" style="margin:5px;">
-            <img :src="props.item.avatar">
-          </v-avatar>
-        </td>
-        <td class="text-xs-left">{{ props.item.name }}</td>
-        <td class="text-xs-left">{{ props.item.telephone }}</td>
-        <td class="text-xs-left">{{ props.item.gender }}</td>
-        <td class="text-xs-left">{{ props.item.age }}</td>
-        <td class="text-xs-left">{{ props.item.thirdPartyId }}</td>
-        <td class="justify-center layout px-0">
-          <v-btn icon class="mx-0" @click="editItem(props.item)">
-            <v-icon color="teal">edit</v-icon>
-          </v-btn>
-          <v-btn icon class="mx-0" @click="deleteItem(props.item)">
-            <v-icon color="pink">delete</v-icon>
-          </v-btn>
-        </td>
-      </template>
-    </v-data-table>
+    <!-- 列表-全部用户 -->
+    <v-card>
+      <v-card-title>
+        All Users
+        <v-spacer></v-spacer>
+        <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+      </v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="users"
+        :search="search"
+        :pagination.sync="pagination"
+        class="elevation-1"
+      >
+        <template v-slot:items="props">
+          <td>{{ props.item.id }}</td>
+          <td>
+            <v-avatar size="40" style="margin:5px;">
+              <img :src="props.item.avatar">
+            </v-avatar>
+          </td>
+          <td class="text-xs-left">{{ props.item.name }}</td>
+          <td class="text-xs-left">{{ props.item.telephone }}</td>
+          <td class="text-xs-left">{{ props.item.gender }}</td>
+          <td class="text-xs-left">{{ props.item.age }}</td>
+          <td class="text-xs-left">{{ props.item.thirdPartyId }}</td>
+          <td class="justify-center layout px-0">
+            <v-btn icon class="mx-0" @click="editItem(props.item)">
+              <v-icon color="teal">edit</v-icon>
+            </v-btn>
+            <v-btn icon class="mx-0" @click="deleteItem(props.item)">
+              <v-icon color="pink">delete</v-icon>
+            </v-btn>
+          </td>
+        </template>
+      </v-data-table>
+    </v-card>
+    <!-- 对话框-确认删除 -->
     <v-dialog v-model="dialog" max-width="360">
       <v-card>
         <v-card-title class="headline orange white--text">WARNING</v-card-title>
         <v-card-text class="mb-2 font-weight-light">
-          Confirm to delete?
-          <br>The related ORDERS will also be deleted.
-          <br>Deleted item CANNOT be recovered.
+          确认删除吗？
+          <br>和用户相关的订单将全部删除(相关的评论不会删除)
+          <br>该操作不可恢复
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -43,6 +53,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- 对话框-添加用户 -->
     <v-dialog v-model="dialog1" persistent max-width="600px">
       <template v-slot:activator="{ on }">
         <v-layout row justify-center>
@@ -133,6 +144,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- 对话框-更新用户信息 -->
     <v-dialog v-model="dialog2" persistent max-width="600px">
       <v-card>
         <v-card-title>
@@ -222,6 +234,7 @@ export default {
       dialog: false,
       dialog1: false,
       dialog2: false,
+      search: "",
       message: "",
       userInfo: {
         id: "",
