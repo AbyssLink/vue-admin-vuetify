@@ -87,7 +87,7 @@ export default {
   methods: {
     getItemList() {
       Vue.prototype.$http
-        .get("http://localhost:8088/item/list")
+        .get("/item/list")
         .then(response => {
           if (response.data.status == "success") {
             this.message = "获取商品列表成功";

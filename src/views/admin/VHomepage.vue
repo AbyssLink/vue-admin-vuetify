@@ -45,7 +45,7 @@ export default {
       chartOption: {
         backgroundColor: '#394056',
         title: {
-          text: '请求数',
+          text: '请求数(假数据)',
           textStyle: {
             fontWeight: 'normal',
             fontSize: 16,

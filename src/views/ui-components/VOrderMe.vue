@@ -93,7 +93,7 @@ export default {
     getOrderList() {
       Vue.prototype.$http
         .get(
-          "http://localhost:8088/order/listbyuser?id=" +
+          "/order/listbyuser?id=" +
             JSON.parse(localStorage.getItem("LOGIN_USER")).id
         )
         .then(response => {
@@ -119,7 +119,7 @@ export default {
       this.dialog = false;
       // 提交，确认删除
       Vue.prototype.$http
-        .get("http://localhost:8088/order/delete?id=" + this.orderInfo.id)
+        .get("/order/delete?id=" + this.orderInfo.id)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "删除成功, id = " + this.orderInfo.id;

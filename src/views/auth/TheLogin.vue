@@ -6,7 +6,7 @@
           <v-flex xs12 sm8 md4>
             <v-card class="elevation-12">
               <v-toolbar dark color="primary">
-                <v-toolbar-title>Login form</v-toolbar-title>
+                <v-toolbar-title>Login</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-tooltip bottom>
                   <v-btn icon large :href="source" target="_blank" slot="activator">
@@ -22,7 +22,7 @@
                     prepend-icon="person"
                     :rules="commonRules"
                     name="telephone"
-                    label="telephone"
+                    label="电话号码"
                     type="text"
                   ></v-text-field>
                   <v-text-field
@@ -30,7 +30,7 @@
                     prepend-icon="lock"
                     name="password"
                     :rules="commonRules"
-                    label="Password"
+                    label="密码"
                     id="password"
                     type="password"
                   ></v-text-field>
@@ -38,8 +38,8 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="red" class="white--text" @click="register">Register</v-btn>
-                <v-btn color="primary" @click="login">Login</v-btn>
+                <v-btn color="red" class="white--text" @click="register">注册</v-btn>
+                <v-btn color="primary" @click="login">登陆</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -77,7 +77,7 @@ export default {
     },
     login() {
       Vue.prototype.$http
-        .post("http://localhost:8088/user/login", this.userInfo)
+        .post("/user/login", this.userInfo)
         .then(response => {
           if (response.data.status == "success") {
             // 存储登陆信息在客户端浏览器中

@@ -333,7 +333,7 @@ public CommonReturnType getItem(@RequestParam(name = "id", required = false) Int
 ...
   // 调用获取商品列表接口
   Vue.prototype.$http
-    .get("http://localhost:8088/item/list")
+    .get("/item/list")
     .then(response => {
     if (response.data.status == "success") {
       this.message = "获取商品列表成功";

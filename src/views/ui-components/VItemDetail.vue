@@ -207,7 +207,7 @@ export default {
 
       this.orderInfo.itemId = this.itemInfo.id;
       Vue.prototype.$http
-        .post("http://localhost:8088/order/createorder", this.orderInfo)
+        .post("/order/createorder", this.orderInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message =
@@ -227,7 +227,7 @@ export default {
     getItemDetail() {
       this.itemInfo.id = getParam("id");
       Vue.prototype.$http
-        .get("http://localhost:8088/item/get?id=" + this.itemInfo.id)
+        .get("/item/get?id=" + this.itemInfo.id)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "获取商品信息成功";
@@ -246,7 +246,7 @@ export default {
     getComment() {
       Vue.prototype.$http
         .get(
-          "http://localhost:8088/comment/listbyitem?itemid=" + this.itemInfo.id
+          "/comment/listbyitem?itemid=" + this.itemInfo.id
         )
         .then(response => {
           if (response.data.status == "success") {
@@ -273,7 +273,7 @@ export default {
       // console.log(this.commentInfo);
 
       Vue.prototype.$http
-        .post("http://localhost:8088/comment/create", this.commentInfo)
+        .post("/comment/create", this.commentInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "评论成功!" + " 可在 [我的评论] 页面中查看";

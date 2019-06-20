@@ -36,7 +36,7 @@ export default {
   methods: {
     createItem() {
       Vue.prototype.$http
-        .post("http://localhost:8088/item/create", this.itemInfo)
+        .post("/item/create", this.itemInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "创建商品成功";

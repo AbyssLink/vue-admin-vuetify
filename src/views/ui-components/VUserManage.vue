@@ -54,7 +54,7 @@
       </v-card>
     </v-dialog>
     <!-- 对话框-添加用户 -->
-    <v-dialog v-model="dialog1" persistent max-width="600px">
+    <!-- <v-dialog v-model="dialog1" persistent max-width="600px">
       <template v-slot:activator="{ on }">
         <v-layout row justify-center>
           <v-btn color="pink" dark v-on="on">Add</v-btn>
@@ -143,7 +143,7 @@
           <v-btn color="blue darken-1" flat @click="createItem">Save</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
     <!-- 对话框-更新用户信息 -->
     <v-dialog v-model="dialog2" persistent max-width="600px">
       <v-card>
@@ -270,7 +270,7 @@ export default {
   methods: {
     getItemList() {
       Vue.prototype.$http
-        .get("http://localhost:8088/user/list")
+        .get("/user/list")
         .then(response => {
           if (response.data.status == "success") {
             this.message = "获取用户信息成功";
@@ -297,7 +297,7 @@ export default {
       this.dialog = false;
 
       Vue.prototype.$http
-        .get("http://localhost:8088/user/delete?id=" + this.userInfo.id)
+        .get("/user/delete?id=" + this.userInfo.id)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "删除成功, id = " + this.userInfo.id;
@@ -320,7 +320,7 @@ export default {
       this.dialog2 = false;
 
       Vue.prototype.$http
-        .post("http://localhost:8088/user/edit", this.userInfo)
+        .post("/user/edit", this.userInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "修改用户信息成功, id=" + this.userInfo.id;
@@ -338,7 +338,7 @@ export default {
     },
     getOtp() {
       Vue.prototype.$http
-        .post("http://localhost:8088/user/getotp", this.userInfo)
+        .post("/user/getotp", this.userInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "otp已发送";
@@ -356,7 +356,7 @@ export default {
       this.dialog1 = false;
 
       Vue.prototype.$http
-        .post("http://localhost:8088/user/register", this.userInfo)
+        .post("/user/register", this.userInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "新增用户成功";

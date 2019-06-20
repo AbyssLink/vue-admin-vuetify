@@ -75,7 +75,7 @@ export default {
         ],
         series: [
           {
-            name: '访问人数',
+            name: '访问人数(假数据)',
             type: 'bar',
             barWidth: '60%',
             data: seriesData,

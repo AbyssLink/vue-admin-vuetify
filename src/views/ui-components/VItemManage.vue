@@ -221,7 +221,7 @@ export default {
   methods: {
     getItemList() {
       Vue.prototype.$http
-        .get("http://localhost:8088/item/list")
+        .get("/item/list")
         .then(response => {
           if (response.data.status == "success") {
             this.message = "获取商品列表成功";
@@ -244,7 +244,7 @@ export default {
     createItem() {
       this.dialog1 = false;
       Vue.prototype.$http
-        .post("http://localhost:8088/item/create", this.itemInfo)
+        .post("/item/create", this.itemInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "创建商品成功";
@@ -267,7 +267,7 @@ export default {
       this.dialog = false;
 
       Vue.prototype.$http
-        .get("http://localhost:8088/item/delete?id=" + this.itemInfo.id)
+        .get("/item/delete?id=" + this.itemInfo.id)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "删除成功, id = " + this.itemInfo.id;
@@ -290,7 +290,7 @@ export default {
       this.dialog2 = false;
 
       Vue.prototype.$http
-        .post("http://localhost:8088/item/edit", this.itemInfo)
+        .post("/item/edit", this.itemInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "修改商品信息成功, id=" + this.itemInfo.id;

@@ -43,7 +43,7 @@ export default new Router({
     },
     {
       path: '/',
-      redirect: { name: 'Dashboard' },
+      redirect: { name: 'Login' },
       meta: {
         hidden: true,
         hasMulSub: false,

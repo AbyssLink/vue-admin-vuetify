@@ -83,7 +83,7 @@ export default {
         { text: "order price (rmb)", value: "orderPrice" }
       ],
       pagination: {
-        rowsPerPage: 50 // -1 for All",
+        rowsPerPage: 25 // -1 for All",
       },
       orders: [],
       commonRules: [v => !!v || "This is required"]
@@ -93,7 +93,7 @@ export default {
   methods: {
     getOrderList() {
       Vue.prototype.$http
-        .get("http://localhost:8088/order/list")
+        .get("/order/list")
         .then(response => {
           if (response.data.status == "success") {
             this.message = "获取订单列表成功";
@@ -117,7 +117,7 @@ export default {
       this.dialog = false;
       // 提交，确认删除
       Vue.prototype.$http
-        .get("http://localhost:8088/order/delete?id=" + this.orderInfo.id)
+        .get("/order/delete?id=" + this.orderInfo.id)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "删除成功, id = " + this.orderInfo.id;

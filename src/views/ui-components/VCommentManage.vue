@@ -135,7 +135,7 @@ export default {
   methods: {
     getOrderList() {
       Vue.prototype.$http
-        .get("http://localhost:8088/comment/list")
+        .get("/comment/list")
         .then(response => {
           if (response.data.status == "success") {
             this.message = "获取订单列表成功";
@@ -159,7 +159,7 @@ export default {
       this.dialog = false;
       // 提交，确认删除
       Vue.prototype.$http
-        .get("http://localhost:8088/comment/delete?id=" + this.itemInfo.id)
+        .get("/comment/delete?id=" + this.itemInfo.id)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "删除成功, id = " + this.itemInfo.id;
@@ -184,7 +184,7 @@ export default {
       console.log(this.itemInfo);
 
       Vue.prototype.$http
-        .post("http://localhost:8088/comment/update", this.itemInfo)
+        .post("/comment/update", this.itemInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "更新评论成功!";

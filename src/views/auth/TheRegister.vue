@@ -6,7 +6,7 @@
           <v-flex xs12 sm8 md4>
             <v-card class="elevation-12">
               <v-toolbar dark color="primary">
-                <v-toolbar-title>Login form</v-toolbar-title>
+                <v-toolbar-title>Register</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-tooltip bottom>
                   <v-btn icon large :href="source" target="_blank" slot="activator">
@@ -22,24 +22,31 @@
                     prepend-icon="phone"
                     :rules="commonRules"
                     name="telephone"
-                    label="telephone"
+                    label="手机号(不需要填真实的手机号！)"
                     type="text"
                   ></v-text-field>
-                  <v-text-field
-                    v-model="userInfo.otpCode"
-                    prepend-icon="notifications_active"
-                    name="otpCode"
-                    :rules="commonRules"
-                    label="otpCode"
-                    id="otpCode"
-                    type="text"
-                  ></v-text-field>
+                  <v-layout>
+                    <v-flex xs9>
+                      <v-text-field
+                        v-model="userInfo.otpCode"
+                        prepend-icon="notifications_active"
+                        name="otpCode"
+                        :rules="commonRules"
+                        label="验证码"
+                        id="otpCode"
+                        type="text"
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex xs2 align-content-center>
+                      <v-btn color="warning" class="white--text" @click="getOtp">获取验证码</v-btn>
+                    </v-flex>
+                  </v-layout>
                   <v-text-field
                     v-model="userInfo.name"
                     prepend-icon="person"
                     name="name"
                     :rules="commonRules"
-                    label="name"
+                    label="昵称"
                     id="name"
                     type="text"
                   ></v-text-field>
@@ -48,25 +55,17 @@
                     prepend-icon="lock"
                     name="password"
                     :rules="commonRules"
-                    label="Password"
+                    label="密码"
                     id="password"
                     type="password"
                   ></v-text-field>
-                  <v-text-field
-                    v-model="userInfo.gender"
-                    prepend-icon="group"
-                    name="gender"
-                    :rules="commonRules"
-                    label="gender"
-                    id="gender"
-                    type="text"
-                  ></v-text-field>
+                  <v-select prepend-icon="group" :items="genders" label="性别" v-model="gender"></v-select>
                   <v-text-field
                     v-model="userInfo.age"
                     prepend-icon="cake"
                     name="age"
                     :rules="commonRules"
-                    label="age"
+                    label="年龄"
                     id="age"
                     type="text"
                   ></v-text-field>
@@ -75,16 +74,23 @@
                     prepend-icon="face"
                     name="avatar"
                     :rules="commonRules"
-                    label="avatar"
+                    label="头像(请填入网络图片的 URL 地址)"
                     id="avatar"
+                    type="text"
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userInfo.invite"
+                    prepend-icon="school"
+                    name="invite"
+                    label="邀请码(如果有你就可以超越人类啦)"
+                    id="invite"
                     type="text"
                   ></v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="warning" class="white--text" @click="getOtp">getOtp</v-btn>
-                <v-btn color="primary" @click="register">Register</v-btn>
+                <v-btn color="primary" @click="register">注册</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -108,8 +114,11 @@ export default {
         password: "",
         age: "",
         gender: "",
-        avatar: ""
+        avatar: "",
+        invite: ""
       },
+      genders: ["male", "female"],
+      gender: "",
       commonRules: [v => !!v || "This is required"],
       source: "https://github.com/ShiroCheng/spikeproject"
     };
@@ -117,10 +126,10 @@ export default {
   methods: {
     getOtp() {
       Vue.prototype.$http
-        .post("http://localhost:8088/user/getotp", this.userInfo)
+        .post("/user/getotp", this.userInfo)
         .then(response => {
           if (response.data.status == "success") {
-            this.message = "otp已发送到您的手机上，请注意查收";
+            this.message = "验证码为: " + response.data.data.message;
             Snackbar.success(this.message);
           } else {
             this.message = "验证码发送失败，原因为" + response.data.data.errMsg;
@@ -135,8 +144,13 @@ export default {
         });
     },
     register() {
+      if (this.gender == "male") {
+        this.userInfo.gender = 1;
+      } else {
+        this.userInfo.gender = 2;
+      }
       Vue.prototype.$http
-        .post("http://localhost:8088/user/register", this.userInfo)
+        .post("/user/register", this.userInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "注册成功, 正在跳转登陆界面...";

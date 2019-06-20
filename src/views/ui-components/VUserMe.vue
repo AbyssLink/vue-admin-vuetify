@@ -70,7 +70,7 @@ export default {
     },
     editUserInfo() {
       Vue.prototype.$http
-        .post("http://localhost:8088/user/edit", this.userInfo)
+        .post("/user/edit", this.userInfo)
         .then(response => {
           if (response.data.status == "success") {
             this.message = "保存个人信息成功";
