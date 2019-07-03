@@ -250,6 +250,10 @@ export default {
       en: 'Comment Components',
       'zh-CN': '评论'
     },
+    music: {
+      en: 'Music Components',
+      'zh-CN': '音乐'
+    },
     tables: {
       en: 'Tables',
       'zh-CN': '表格'
