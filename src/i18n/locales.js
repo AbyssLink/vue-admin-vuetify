@@ -254,6 +254,10 @@ export default {
       en: 'Music Components',
       'zh-CN': '音乐'
     },
+    book: {
+      en: 'Book Components',
+      'zh-CN': '图书'
+    },
     tables: {
       en: 'Tables',
       'zh-CN': '表格'

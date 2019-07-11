@@ -10,6 +10,8 @@ import userComponents from './modules/user-components';
 import orderComponents from './modules/order-components';
 import commentComponents from './modules/comment-components';
 import musicComponents from './modules/music-components';
+import bookComponents from './modules/book-components';
+
 
 Vue.use(Router);
 
@@ -68,6 +70,7 @@ export default new Router({
             icon: 'dashboard',
           },
         },
+        bookComponents,
         musicComponents,
         itemComponents,
         orderComponents,
