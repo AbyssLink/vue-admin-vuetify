@@ -15,17 +15,20 @@
         class="elevation-1"
       >
         <template v-slot:items="props">
-          <td>{{ props.item.id }}</td>
+          <td class="text-xs-left">
+            <v-btn v-if="props.item.status === 1" icon large @click="editItem(props.item)">
+              <v-icon color="orange">schedule</v-icon>
+            </v-btn>
+            <v-btn v-else icon large @click="editItem(props.item)">
+              <v-icon color="teal">check_circle_outline</v-icon>
+            </v-btn>
+          </td>
           <td class="text-xs-left">{{ props.item.title }}</td>
           <td class="text-xs-left">{{ props.item.content }}</td>
           <td class="text-xs-left">{{ props.item.date }}</td>
-          <td class="text-xs-left">{{ props.item.status }}</td>
           <td class="justify-center layout">
-            <v-btn icon class="mx-0" @click="editItem(props.item)">
-              <v-icon color="teal">edit</v-icon>
-            </v-btn>
-            <v-btn icon class="mx-0" @click.stop="deleteItem(props.item)">
-              <v-icon color="pink">delete</v-icon>
+            <v-btn icon large @click.stop="deleteItem(props.item)">
+              <v-icon color="red">delete_outline</v-icon>
             </v-btn>
           </td>
         </template>
@@ -172,16 +175,10 @@ export default {
         status: ""
       },
       headers: [
-        {
-          text: "todoId",
-          align: "left",
-          sortable: false,
-          value: "id"
-        },
+        { text: "status", value: "status" },
         { text: "title", value: "title" },
         { text: "content", value: "content" },
-        { text: "date", value: "date" },
-        { text: "status", value: "status" }
+        { text: "date", value: "date" }
       ],
       pagination: {
         rowsPerPage: 25 // -1 for All",
@@ -198,7 +195,13 @@ export default {
         .then(response => {
           if (response.data.status == "success") {
             this.message = "获取待办列表成功";
-            this.items = response.data.data;
+            this.items = [];
+            for (let item of response.data.data) {
+              item.date = item.date.replace("T", "  ");
+              item.date = item.date.replace(":00.000+0000", "");
+              console.log(item.date);
+              this.items.push(item);
+            }
             // Snackbar.info(this.message);
           } else {
             this.message =
@@ -234,7 +237,22 @@ export default {
         });
     },
     editItem(item) {
-      Snackbar.info("开发中，请等待……");
+      Vue.prototype.$http
+        .get("/todo/changebyid?id=" + item.id)
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "更改成功, id = " + item.id;
+            if (item.status == 1) {
+              item.status = 2;
+            } else {
+              item.status = 1;
+            }
+            Snackbar.warning(this.message);
+          } else {
+            this.message = "更改失败，原因为" + response.data.data.errMsg;
+            Snackbar.error(this.message);
+          }
+        });
     },
     createItem() {
       this.itemInfo.userId = JSON.parse(localStorage.getItem("LOGIN_USER")).id;

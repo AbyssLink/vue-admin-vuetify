@@ -29,8 +29,8 @@
               @click.native="getItemDownloadLink(item.id)"
               class="mx-auto"
               color="grey lighten-4"
-              min-width="245"
-              max-width="250"
+              min-width="310"
+              max-width="390"
               slot-scope="{ hover }"
               hover
             >
@@ -67,6 +67,11 @@
           <br />示例3：522247094
           <br />示例4：2788619489
           <br />示例5：587184039
+          <br />示例6：2731351855
+          <br />示例7：306397077
+          <br />示例8：2550658823
+          <br />示例9：2101596106
+          <br />示例10：524892096
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
