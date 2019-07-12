@@ -34,7 +34,7 @@
             <td>{{ props.item.name }}</td>
             <td>
               <v-avatar size="50" tile style="margin:5px">
-                <img :src="props.item.al.picUrl">
+                <img :src="props.item.al.picUrl" />
               </v-avatar>
             </td>
             <td class="text-xs-left">{{ props.item.ar[0].id }}</td>
@@ -50,10 +50,10 @@
         <v-card-title class="headline green white--text">HELP</v-card-title>
         <v-card-text class="mb-2 font-weight-light">
           在网易云音乐的歌单上按右键，复制链接，
-          <br>拿去浏览器里打开，地址栏里面可以看到这个歌单的id┌( ಠ_ಠ)┘
-          <br>示例1：527370988
-          <br>示例2：2774387110
-          <br>示例3：522247094
+          <br />拿去浏览器里打开，地址栏里面可以看到这个歌单的id┌( ಠ_ಠ)┘
+          <br />示例1：527370988
+          <br />示例2：2774387110
+          <br />示例3：522247094
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -67,14 +67,7 @@
  <script>
 import Vue from "vue";
 import Snackbar from "../../components/snackbar/index";
-import Axios from "axios";
 import { setInterval, setTimeout } from "timers";
-
-Axios.defaults.withCredentials = false; //! 跨域不带cookies
-Axios.defaults.headers.post["Content-Type"] =
-  "application/x-www-form-urlencoded";
-Axios.defaults.headers.get["Content-Type"] =
-  "application/x-www-form-urlencoded";
 
 export default {
   data() {
@@ -114,9 +107,11 @@ export default {
   created: () => {},
   methods: {
     searchItemList() {
-      Axios.get(
-        "https://api.imjad.cn/cloudmusic/?type=playlist&id=" + this.search
-      )
+      Vue.prototype.$http
+        .get(
+          "https://api.imjad.cn/cloudmusic/?type=playlist&id=" + this.search,
+          { withCredentials: false }
+        )
         .then(response => {
           if (Object.keys(response.data.playlist).length != 0) {
             let trackIds = response.data.playlist.trackIds;
@@ -138,11 +133,14 @@ export default {
         });
     },
     getItemDetail(id) {
-      Axios.get("https://api.imjad.cn/cloudmusic/?type=detail&id=" + id).then(
-        response => {
+      this.items = [];
+      Vue.prototype.$http
+        .get("https://api.imjad.cn/cloudmusic/?type=detail&id=" + id, {
+          withCredentials: false
+        })
+        .then(response => {
           this.items.push(response.data.songs[0]);
-        }
-      );
+        });
     },
     init() {
       this.$vuetify.theme.primary = "#DE2727";

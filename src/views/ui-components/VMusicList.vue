@@ -29,15 +29,15 @@
               @click.native="getItemDownloadLink(item.id)"
               class="mx-auto"
               color="grey lighten-4"
-              min-width="300"
-              max-width="380"
+              min-width="245"
+              max-width="250"
               slot-scope="{ hover }"
               hover
             >
               <v-img :aspect-ratio="15/14" :src="item.al.picUrl">
                 <v-expand-transition>
                   <div
-                    class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
+                    class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-1 white--text"
                     style="height: 100%;"
                     v-if="hover"
                   >{{item.ar[0].name}}</div>
@@ -61,10 +61,12 @@
         <v-card-title class="headline green white--text">HELP</v-card-title>
         <v-card-text class="mb-2 font-weight-light">
           在网易云音乐的歌单上按右键，复制链接，
-          <br>拿去浏览器里打开，地址栏里面可以看到这个歌单的id┌( ಠ_ಠ)┘
-          <br>示例1：527370988
-          <br>示例2：2774387110
-          <br>示例3：522247094
+          <br />拿去浏览器里打开，地址栏里面可以看到这个歌单的id┌( ಠ_ಠ)┘
+          <br />示例1：527370988
+          <br />示例2：2866207397
+          <br />示例3：522247094
+          <br />示例4：2788619489
+          <br />示例5：587184039
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -78,14 +80,7 @@
  <script>
 import Vue from "vue";
 import Snackbar from "../../components/snackbar/index";
-import Axios from "axios";
 import { setInterval, setTimeout } from "timers";
-
-Axios.defaults.withCredentials = false; //! 跨域不带cookies
-Axios.defaults.headers.post["Content-Type"] =
-  "application/x-www-form-urlencoded";
-Axios.defaults.headers.get["Content-Type"] =
-  "application/x-www-form-urlencoded";
 
 export default {
   data() {
@@ -101,9 +96,11 @@ export default {
   created: () => {},
   methods: {
     searchItemList() {
-      Axios.get(
-        "https://api.imjad.cn/cloudmusic/?type=playlist&id=" + this.search
-      )
+      Vue.prototype.$http
+        .get(
+          "https://api.imjad.cn/cloudmusic/?type=playlist&id=" + this.search,
+          { withCredentials: false }
+        )
         .then(response => {
           /*           this.message = "努力获取歌单中，请稍候(｡ì _ í｡)";
           Snackbar.info(this.message); */
@@ -129,42 +126,31 @@ export default {
         });
     },
     getItemDetail(id) {
-      Axios.get("https://api.imjad.cn/cloudmusic/?type=detail&id=" + id).then(
-        response => {
+      this.items = [];
+      Vue.prototype.$http
+        .get("https://api.imjad.cn/cloudmusic/?type=detail&id=" + id, {
+          withCredentials: false
+        })
+        .then(response => {
           this.items.push(response.data.songs[0]);
-        }
-      );
+        });
     },
     getItemDownloadLink(id) {
       // Snackbar.info("开发中，请等待");
-      Axios.get("https://api.imjad.cn/cloudmusic/?type=song&id=" + id).then(
-        response => {
+      Vue.prototype.$http
+        .get("https://api.imjad.cn/cloudmusic/?type=song&id=" + id, {
+          withCredentials: false
+        })
+        .then(response => {
           let data = response.data.data;
           console.log(data);
           this.music = data[0].url;
           // this.play();
           window.open(this.music);
-        }
-      );
+        });
     },
     init() {
       this.$vuetify.theme.primary = "#DE2727";
-    },
-    play() {
-      let audio = document.querySelector("#bgm");
-      this.$refs.bgm.src = this.music;
-      if (!this.isPlaying) {
-        audio.play();
-        this.isPlaying = true;
-      }
-    },
-    stop() {
-      let audio = document.querySelector("#bgm");
-      this.$refs.bgm.src = this.music;
-      if (this.isPlaying) {
-        audio.pause();
-        audio.currentTime = 0;
-      }
     },
     helpDialog() {
       this.dialog = true;

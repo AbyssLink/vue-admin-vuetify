@@ -249,6 +249,7 @@ export default {
           if (response.data.status == "success") {
             this.message = "创建商品成功";
             Snackbar.success(this.message);
+            this.getItemList();
           } else {
             this.message = "创建商品失败，原因为" + response.data.data.errMsg;
             Snackbar.error(this.message);

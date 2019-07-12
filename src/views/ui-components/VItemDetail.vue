@@ -277,6 +277,7 @@ export default {
         .then(response => {
           if (response.data.status == "success") {
             this.message = "评论成功!" + " 可在 [我的评论] 页面中查看";
+            this.getComment();
             Snackbar.success(this.message);
           } else {
             this.message = "评论失败，原因为: " + response.data.data.errMsg;
