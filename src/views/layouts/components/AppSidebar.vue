@@ -161,7 +161,8 @@ export default {
           route.name === "User" ||
           route.name === "Comment" ||
           route.name === "Music" ||
-          route.name === "Book")
+          route.name === "Book" ||
+          route.name === "Assistant")
       ) {
         return title;
       }

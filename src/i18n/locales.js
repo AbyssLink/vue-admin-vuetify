@@ -258,6 +258,10 @@ export default {
       en: 'Book Components',
       'zh-CN': '图书'
     },
+    assistant: {
+      en: 'Assistant Components',
+      'zh-CN': '助手'
+    },
     tables: {
       en: 'Tables',
       'zh-CN': '表格'

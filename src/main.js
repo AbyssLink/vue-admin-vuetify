@@ -40,7 +40,11 @@ try {
 Axios.defaults.withCredentials = true; //! 跨域带cookies
 Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 Axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
-Axios.defaults.baseURL = 'http://120.78.134.26:8088';
+if (process.env.NODE_ENV !== 'production') {
+  Axios.defaults.baseURL = 'http://localhost:8088';
+} else {
+  Axios.defaults.baseURL = 'http://120.78.134.26:8088';
+}
 Axios.defaults.transformRequest = [
   // eslint-disable-next-line func-names
   function (data) {

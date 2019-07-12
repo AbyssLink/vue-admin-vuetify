@@ -9,8 +9,9 @@ import itemComponents from './modules/item-components';
 import userComponents from './modules/user-components';
 import orderComponents from './modules/order-components';
 import commentComponents from './modules/comment-components';
-import musicComponents from './modules/music-components';
+// import musicComponents from './modules/music-components';
 import bookComponents from './modules/book-components';
+import assistantComponents from './modules/assistant-components';
 
 
 Vue.use(Router);
@@ -71,7 +72,8 @@ export default new Router({
           },
         },
         bookComponents,
-        musicComponents,
+        // musicComponents,
+        assistantComponents,
         itemComponents,
         orderComponents,
         commentComponents,
