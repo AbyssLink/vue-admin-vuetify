@@ -1,32 +1,12 @@
 <template>
   <v-app>
-    <!-- 搜索框-搜索用户 -->
-    <v-layout row justify-center>
-      <v-flex xs6>
-        <v-text-field
-          append-icon="mic"
-          class="mx-3"
-          flat
-          label="输入用户id (如何获取请点 ? 按钮)"
-          prepend-inner-icon="search"
-          solo-inverted
-          v-model="search"
-        ></v-text-field>
-      </v-flex>
-      <v-btn icon color="green" @click="searchItemList">
-        <v-icon color="white">search</v-icon>
-      </v-btn>
-      <v-btn icon color="grey darken-2" @click="helpDialog">
-        <v-icon color="white">help_outline</v-icon>
-      </v-btn>
-    </v-layout>
     <v-container fluid grid-list-xl>
-      <!-- 卡片列表-推荐结果概览 -->
+      <!-- 卡片列表-热门概览 -->
       <v-layout wrap justify-space-around>
         <v-flex v-for="item in items" :key="item.item_id">
           <v-hover>
             <v-card
-              @click.native="getItemDetail(item.item_id)"
+              @click.native="getItemDetail(item)"
               class="mx-auto"
               color="grey lighten-4"
               min-width="260"
@@ -59,25 +39,6 @@
         </v-flex>
       </v-layout>
     </v-container>
-    <!-- 帮助提示框 -->
-    <v-dialog v-model="dialog" max-width="360">
-      <v-card>
-        <v-card-title class="headline green white--text">HELP</v-card-title>
-        <v-card-text class="mb-2 font-weight-light">
-          输入用户 id, 获取推荐结果
-          <br />示例1: 265889
-          <br />示例2: 275473
-          <br />示例3: 254206
-          <br />示例4: 242232
-          <br />示例5: 248718
-          <br />示例6: 242083
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat="flat" @click="dialog = false">OK</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-app>
 </template>
 
@@ -90,7 +51,6 @@ export default {
     return {
       dialog: false,
       message: "",
-      search: "",
       items: [],
       music: "",
       isPlaying: false
@@ -98,15 +58,12 @@ export default {
   },
   created: () => {},
   methods: {
-    searchItemList() {
-      if(this.search === ''){
-        Snackbar.warning("请输入用户 id ")
-      }
+    getItemList() {
       Vue.prototype.$http
-        .get("http://127.0.0.1:5000/itemcf/recoms/" + this.search)
+        .get("http://127.0.0.1:5000/top")
         .then(response => {
           this.items = response.data.data.recom_result;
-          this.message = "获取推荐列表成功(｡ì _ í｡)";
+          this.message = "获取热门列表成功(｡ì _ í｡)";
           console.log(this.items);
           Snackbar.success(this.message);
         })
@@ -114,19 +71,16 @@ export default {
           Snackbar.error(error);
         });
     },
-    getItemDetail(id) {
-      this.$router.push({ name: "图书详情", query: { id: id } });
+    getItemDetail(item) {
+      this.$router.push({ name: "图书详情", params: { item: item } });
     },
     init() {
       this.$vuetify.theme.primary = "#429635";
-    },
-    helpDialog() {
-      this.dialog = true;
     }
   },
   computed: {},
   mounted() {
-    // this.getItemList();
+    this.getItemList();
     this.init();
   },
   destroyed: function() {
