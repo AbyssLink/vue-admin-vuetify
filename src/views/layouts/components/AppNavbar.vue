@@ -4,7 +4,7 @@
       <v-toolbar-side-icon :disabled="!toggleBtn" @click.stop="$emit('toggleSidebar')"></v-toolbar-side-icon>
       <v-toolbar-title class="hidden-sm-and-down">
         <router-link :to="{ name : 'Dashboard' }" class="toolbar-title">
-          <span>ONLINE-Purchase-Platform</span>
+          <span>Book-Recommend-System</span>
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>

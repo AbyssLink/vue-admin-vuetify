@@ -17,8 +17,14 @@ const routes = {
       meta: {},
     },
     {
-      path: 'me',
+      path: 'recom',
       name: '图书推荐',
+      component: () => import('@/views/ui-components/VBookList.vue'),
+      meta: {},
+    },
+    {
+      path: 'me',
+      name: '我的图书',
       component: () => import('@/views/ui-components/VBookList.vue'),
       meta: {},
     },

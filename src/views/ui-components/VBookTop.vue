@@ -1,8 +1,15 @@
 <template>
   <v-app>
+    <!-- 搜索框-搜索用户 -->
+    <v-layout row justify-center>
+      <v-btn class="warning" large @click="getItemList()">获取热门图书 top200</v-btn>
+      <v-btn icon color="success" large @click="changeView">
+        <v-icon color="white">cached</v-icon>
+      </v-btn>
+    </v-layout>
     <v-container fluid grid-list-xl>
       <!-- 卡片列表-热门概览 -->
-      <v-layout wrap justify-space-around>
+      <v-layout wrap justify-space-around v-if="gridView">
         <v-flex v-for="item in items" :key="item.item_id">
           <v-hover>
             <v-card
@@ -38,6 +45,34 @@
           </v-hover>
         </v-flex>
       </v-layout>
+
+      <!-- 列表-推荐结果概览 -->
+      <v-card v-else>
+        <v-card-title>
+          All Recoms
+          <v-spacer></v-spacer>
+        </v-card-title>
+        <v-data-table
+          :headers="headers"
+          :items="items"
+          :pagination.sync="pagination"
+          class="elevation-1"
+        >
+          <template v-slot:items="props">
+            <td>{{ props.item.item_id }}</td>
+            <td>{{ props.item.info.title }}</td>
+            <td>
+              <v-avatar size="50" tile style="margin:5px">
+                <img :src="props.item.info.img_l" />
+              </v-avatar>
+            </td>
+            <td class="text-xs-left">{{ props.item.info.recom_score.toFixed(3)}}</td>
+            <td class="text-xs-left">{{ props.item.info.author }}</td>
+            <td class="text-xs-left">{{ props.item.info.publisher }}</td>
+            <td class="text-xs-left">{{ props.item.info.year }}</td>
+          </template>
+        </v-data-table>
+      </v-card>
     </v-container>
   </v-app>
 </template>
@@ -49,11 +84,26 @@ import Snackbar from "../../components/snackbar/index";
 export default {
   data() {
     return {
+      gridView: true,
       dialog: false,
       message: "",
       items: [],
-      music: "",
-      isPlaying: false
+      headers: [
+        {
+          text: "id",
+          align: "left",
+          value: "id"
+        },
+        { text: "title", value: "title" },
+        { text: "image", value: "image" },
+        { text: "recom_score", value: "recom_score" },
+        { text: "author", value: "author" },
+        { text: "publisher", value: "publisher" },
+        { text: "year", value: "year" }
+      ],
+      pagination: {
+        rowsPerPage: 10 // -1 for All",
+      }
     };
   },
   created: () => {},
@@ -74,13 +124,16 @@ export default {
     getItemDetail(item) {
       this.$router.push({ name: "图书详情", params: { item: item } });
     },
+    changeView() {
+      Snackbar.warning("列表/网格 视图已切换");
+      this.gridView = !this.gridView;
+    },
     init() {
       this.$vuetify.theme.primary = "#429635";
     }
   },
   computed: {},
   mounted() {
-    this.getItemList();
     this.init();
   },
   destroyed: function() {

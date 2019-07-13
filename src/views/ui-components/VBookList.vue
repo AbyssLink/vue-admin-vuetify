@@ -7,22 +7,24 @@
           append-icon="mic"
           class="mx-3"
           flat
-          label="输入用户id (如何获取请点 ? 按钮)"
+          label="请输入用户id"
           prepend-inner-icon="search"
           solo-inverted
-          v-model="search"
+          v-model="userId"
         ></v-text-field>
       </v-flex>
-      <v-btn icon color="green" @click="searchItemList">
-        <v-icon color="white">search</v-icon>
-      </v-btn>
-      <v-btn icon color="grey darken-2" @click="helpDialog">
+      <v-btn @click="searchItemList" color="info">使用物品协同过滤推荐</v-btn>
+      <v-btn @click="searchUserCFItemList" color="warning">使用用户协同过滤推荐</v-btn>
+      <v-btn icon color="red darken-2" @click="helpDialog">
         <v-icon color="white">help_outline</v-icon>
+      </v-btn>
+      <v-btn icon color="success" @click="changeView">
+        <v-icon color="white">cached</v-icon>
       </v-btn>
     </v-layout>
     <v-container fluid grid-list-xl>
-      <!-- 卡片列表-推荐结果概览 -->
-      <v-layout wrap justify-space-around>
+      <!-- 卡片页-推荐结果概览 -->
+      <v-layout wrap justify-space-around v-if="gridView">
         <v-flex v-for="item in items" :key="item.item_id">
           <v-hover>
             <v-card
@@ -58,6 +60,34 @@
           </v-hover>
         </v-flex>
       </v-layout>
+
+      <!-- 列表-推荐结果概览 -->
+      <v-card v-else>
+        <v-card-title>
+          All Recoms
+          <v-spacer></v-spacer>
+        </v-card-title>
+        <v-data-table
+          :headers="headers"
+          :items="items"
+          :pagination.sync="pagination"
+          class="elevation-1"
+        >
+          <template v-slot:items="props">
+            <td>{{ props.item.item_id }}</td>
+            <td>{{ props.item.info.title }}</td>
+            <td>
+              <v-avatar size="50" tile style="margin:5px">
+                <img :src="props.item.info.img_l" />
+              </v-avatar>
+            </td>
+            <td class="text-xs-left">{{ props.item.info.recom_score.toFixed(3)}}</td>
+            <td class="text-xs-left">{{ props.item.info.author }}</td>
+            <td class="text-xs-left">{{ props.item.info.publisher }}</td>
+            <td class="text-xs-left">{{ props.item.info.year }}</td>
+          </template>
+        </v-data-table>
+      </v-card>
     </v-container>
     <!-- 帮助提示框 -->
     <v-dialog v-model="dialog" max-width="360">
@@ -88,22 +118,56 @@ import Snackbar from "../../components/snackbar/index";
 export default {
   data() {
     return {
+      gridView: true,
       dialog: false,
+      userId: "",
       message: "",
       search: "",
       items: [],
-      music: "",
-      isPlaying: false
+      headers: [
+        {
+          text: "id",
+          align: "left",
+          value: "id"
+        },
+        { text: "title", value: "title" },
+        { text: "image", value: "image" },
+        { text: "recom_score", value: "recom_score" },
+        { text: "author", value: "author" },
+        { text: "publisher", value: "publisher" },
+        { text: "year", value: "year" }
+      ],
+      pagination: {
+        rowsPerPage: 10 // -1 for All",
+      }
     };
   },
   created: () => {},
   methods: {
     searchItemList() {
-      if(this.search === ''){
-        Snackbar.warning("请输入用户 id ")
+      if (this.userId === "") {
+        Snackbar.warning("请输入用户 id ");
+        return null;
       }
       Vue.prototype.$http
-        .get("http://127.0.0.1:5000/itemcf/recoms/" + this.search)
+        .get("http://127.0.0.1:5000/itemcf/recoms/" + this.userId)
+        .then(response => {
+          this.items = response.data.data.recom_result;
+          this.message = "获取推荐列表成功(｡ì _ í｡)";
+          console.log(this.items);
+          Snackbar.success(this.message);
+        })
+        .catch(error => {
+          Snackbar.error(error);
+        });
+    },
+    searchUserCFItemList() {
+      if (this.userId === "") {
+        Snackbar.warning("请输入用户 id ");
+        return null;
+      }
+      Vue.prototype.$http
+        .get("http://127.0.0.1:5000/usercf/recoms/" + this.userId)
         .then(response => {
           this.items = response.data.data.recom_result;
           this.message = "获取推荐列表成功(｡ì _ í｡)";
@@ -122,6 +186,10 @@ export default {
     },
     helpDialog() {
       this.dialog = true;
+    },
+    changeView() {
+      Snackbar.warning("列表/网格 视图已切换");
+      this.gridView = !this.gridView;
     }
   },
   computed: {},
