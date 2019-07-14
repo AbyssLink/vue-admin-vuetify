@@ -110,7 +110,7 @@ export default {
   methods: {
     getItemList() {
       Vue.prototype.$http
-        .get("http://127.0.0.1:5000/top")
+        .get("/top")
         .then(response => {
           this.items = response.data.data.recom_result;
           this.message = "获取热门列表成功(｡ì _ í｡)";

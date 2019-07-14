@@ -51,9 +51,9 @@
         <v-menu attach offset-y bottom left nudge-bottom="14">
           <v-toolbar-title v-if="$vuetify && $vuetify.breakpoint.smAndUp" slot="activator">
             <v-avatar size="40">
-              <img :src="user.avatar" alt>
+              <img :src="user.avatar_url" alt>
             </v-avatar>
-            <span style="margin-left: 10px;">{{ user.name }}</span>
+            <span style="margin-left: 10px;">{{ user.id }}</span>
             <v-icon>arrow_drop_down</v-icon>
           </v-toolbar-title>
           <v-btn v-else icon dark slot="activator">

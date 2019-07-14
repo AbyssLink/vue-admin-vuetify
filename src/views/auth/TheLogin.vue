@@ -18,11 +18,11 @@
               <v-card-text>
                 <v-form>
                   <v-text-field
-                    v-model="userInfo.telephone"
+                    v-model="userInfo.userId"
                     prepend-icon="person"
                     :rules="commonRules"
-                    name="telephone"
-                    label="电话号码"
+                    name="userId"
+                    label="用户ID"
                     type="text"
                   ></v-text-field>
                   <v-text-field
@@ -57,7 +57,7 @@ export default {
     return {
       message: "",
       userInfo: {
-        telephone: "",
+        userId: "",
         password: ""
       },
       form: {
@@ -77,25 +77,22 @@ export default {
     },
     login() {
       Vue.prototype.$http
-        .post("/user/login", this.userInfo)
+        .post("/login", this.userInfo)
         .then(response => {
           if (response.data.status == "success") {
             // 存储登陆信息在客户端浏览器中
             let userFullInfo = response.data.data;
             localStorage.setItem("LOGIN_USER", JSON.stringify(userFullInfo));
 
+            console.log(userFullInfo);
+
             this.loginLoading = true;
             this.message = "登陆成功";
             Snackbar.success(this.message);
             this.loginLoading = false;
             this.$router.push({ name: "Index" });
-            /*             // 定时跳转页面
-            setTimeout(() => {
-              window.location.href = "/dashboard";
-              //  this.$router.push({ name: "Index" });
-            }, 1500); */
           } else {
-            this.message = "登陆失败，原因为" + response.data.data.errMsg;
+            this.message = "登陆失败，原因为" + response.data.errMsg;
             Snackbar.error(this.message);
           }
         })
