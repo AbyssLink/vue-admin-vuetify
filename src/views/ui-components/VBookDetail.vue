@@ -3,7 +3,7 @@
     <v-container fluid grid-list-xl>
       <!-- 卡片列表-热门概览 -->
       <v-layout wrap justify-space-around>
-        <v-flex>
+        <v-flex xs7>
           <v-hover>
             <v-card
               class="mx-auto"
@@ -46,6 +46,46 @@
             </v-card>
           </v-hover>
         </v-flex>
+        <v-flex xs5>
+          <!-- 卡片-评论列表 -->
+          <div id="e3" style="max-width: 600px; margin: auto;" class="grey lighten-3">
+            <v-toolbar color="cyan" dark>
+              <v-toolbar-title>评分</v-toolbar-title>
+              <v-spacer></v-spacer>
+            </v-toolbar>
+            <template>
+              <v-flex xs12>
+                <v-card class="mx-auto" max-width="550" hover>
+                  <v-card-title primary-title>
+                    <div>
+                      <h3 class="headline mb-0">{{myRating}}</h3>
+                    </div>
+                  </v-card-title>
+                  <v-card-actions>
+                    <v-list-tile class="grow">
+                      <v-list-tile-avatar color="grey darken-3">
+                        <v-img class="elevation-6" :src="avatar_url"></v-img>
+                      </v-list-tile-avatar>
+                      <v-list-tile-content>
+                        <v-list-tile-title>{{userName}}</v-list-tile-title>
+                      </v-list-tile-content>
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="todo">
+                        <v-icon color="red">favorite</v-icon>
+                      </v-btn>
+                      <v-btn icon @click="todo">
+                        <v-icon color="amber accent-2">bookmark</v-icon>
+                      </v-btn>
+                      <v-btn icon @click="todo">
+                        <v-icon color="blue">share</v-icon>
+                      </v-btn>
+                    </v-list-tile>
+                  </v-card-actions>
+                </v-card>
+              </v-flex>
+            </template>
+          </div>
+        </v-flex>
       </v-layout>
       <!-- 评分对话框 -->
       <v-layout row justify-center>
@@ -81,35 +121,19 @@
 import Vue from "vue";
 import Snackbar from "../../components/snackbar/index";
 
-function getParam(paramName) {
-  // 解析 url 参数, 获取 qurey string
-  let paramValue = "";
-  let isFound = !1;
-  if (
-    window.location.search.indexOf("?") == 0 &&
-    window.location.search.indexOf("=") > 1
-  ) {
-    let arrSource;
-    let i;
-    (arrSource = unescape(window.location.search)
-      .substring(1, window.location.search.length)
-      .split("&")),
-      (i = 0);
-    while (i < arrSource.length && !isFound)
-      arrSource[i].indexOf("=") > 0 &&
-        arrSource[i].split("=")[0].toLowerCase() == paramName.toLowerCase() &&
-        ((paramValue = arrSource[i].split("=")[1]), (isFound = !0)),
-        i++;
-  }
-  return paramValue == "" && (paramValue = null), paramValue;
-}
-
 export default {
   data() {
     return {
       dialog: false,
       message: "",
       rating: 4.5,
+      userName: "",
+      myRating: "",
+      form: {
+        userId: "",
+        bookId: "",
+        score: ""
+      },
       item: {
         item_id: "",
         info: {
@@ -118,8 +142,7 @@ export default {
           publisher: "",
           recom_score: "",
           title: "",
-          year: "",
-          item_id: ""
+          year: ""
         }
       },
       music: "",
@@ -134,11 +157,56 @@ export default {
     },
     addRate() {
       this.dialog = false;
-      console.log(this.rating);
+      this.form.userId = this.userId;
+      this.form.bookId = this.item.item_id;
+      this.form.score = this.rating * 2; // 0～5分制 => 0~10分制
+      console.log(this.form);
+
+      Vue.prototype.$http
+        .post("/rating/add", this.form)
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "评价成功";
+            Snackbar.success(this.message);
+            this.getRate();
+          } else {
+            this.message = "评价失败，原因为: " + response.data.data.errMsg;
+            Snackbar.error(this.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      console.log(this.form);
+    },
+    getRate() {
+      Vue.prototype.$http
+        .get("/rating/user/" + this.userId + "/" + this.item.item_id)
+        .then(response => {
+          if (response.data.status == "success") {
+            this.message = "获取评分成功";
+            this.myRating = "我对这本书的评分: " + response.data.data.score / 2;
+            Snackbar.success(this.message);
+          } else {
+            this.myRating = "还没有对它评分呢🤣, 请点击🌟按钮评分"
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     init() {
-      this.getItemDetail();
       this.$vuetify.theme.primary = "#429635";
+      this.userId = JSON.parse(localStorage.getItem("LOGIN_USER")).id;
+      this.avatar_url = JSON.parse(
+        localStorage.getItem("LOGIN_USER")
+      ).avatar_url;
+      this.userName = JSON.parse(localStorage.getItem("LOGIN_USER")).id;
+      this.getItemDetail();
+      this.getRate();
+    },
+    todo() {
+      Snackbar.info("开发中，请等待");
     }
   },
   computed: {},

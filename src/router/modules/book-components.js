@@ -19,7 +19,7 @@ const routes = {
     {
       path: 'search',
       name: '图书搜索',
-      component: () => import('@/views/ui-components/VBookMe.vue'),
+      component: () => import('@/views/ui-components/VBookSearch.vue'),
       meta: {},
     },
     {
