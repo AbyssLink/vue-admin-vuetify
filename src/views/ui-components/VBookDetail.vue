@@ -23,6 +23,18 @@
                 </v-expand-transition>
               </v-img>
               <v-card-text style="position: relative;">
+                <v-btn
+                  @click="dialog = true"
+                  absolute
+                  class="white--text"
+                  color="red"
+                  fab
+                  large
+                  right
+                  top
+                >
+                  <v-icon color="yellow">star</v-icon>
+                </v-btn>
                 <div class="font-weight-light title grey--text mb-2">{{item.info.title}}</div>
                 <h3 class="display-3 font-weight-light title orange--text mb-2">{{item.info.author}}</h3>
                 <div class="font-weight-light mb-2">
@@ -34,6 +46,32 @@
             </v-card>
           </v-hover>
         </v-flex>
+      </v-layout>
+      <!-- 评分对话框 -->
+      <v-layout row justify-center>
+        <v-dialog v-model="dialog" max-width="300">
+          <v-card class="elevation-16 mx-auto" width="300">
+            <v-card-title class="headline" primary-title>评价本书</v-card-title>
+            <v-card-text>
+              如果你阅读过这本书，欢迎花几秒钟评价这本书，这很有用！
+              <div class="text-xs-center mt-5">
+                <v-rating
+                  v-model="rating"
+                  color="yellow darken-3"
+                  background-color="grey darken-1"
+                  empty-icon="$vuetify.icons.ratingFull"
+                  half-increments
+                  hover
+                ></v-rating>
+              </div>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions class="justify-space-between">
+              <v-btn flat @click="dialog = false">不，谢谢</v-btn>
+              <v-btn color="primary" @click="addRate" flat>提交</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-layout>
     </v-container>
   </v-app>
@@ -71,7 +109,19 @@ export default {
     return {
       dialog: false,
       message: "",
-      item: {},
+      rating: 4.5,
+      item: {
+        item_id: "",
+        info: {
+          author: "",
+          img_l: "",
+          publisher: "",
+          recom_score: "",
+          title: "",
+          year: "",
+          item_id: ""
+        }
+      },
       music: "",
       isPlaying: false
     };
@@ -82,13 +132,17 @@ export default {
       this.item = this.$route.params.item;
       console.log(this.item);
     },
+    addRate() {
+      this.dialog = false;
+      console.log(this.rating);
+    },
     init() {
+      this.getItemDetail();
       this.$vuetify.theme.primary = "#429635";
     }
   },
   computed: {},
   mounted() {
-    this.getItemDetail();
     this.init();
   },
   destroyed: function() {

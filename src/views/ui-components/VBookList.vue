@@ -23,12 +23,22 @@
       </v-btn>
     </v-layout>
     <v-container fluid grid-list-xl>
+      <!-- Progress-bar -->
+      <v-layout justify-space-around v-if="loading">
+        <v-progress-circular
+          style="marginTop:100px"
+          :size="120"
+          :width="10"
+          color="orange"
+          indeterminate
+        ></v-progress-circular>
+      </v-layout>
       <!-- 卡片页-推荐结果概览 -->
       <v-layout wrap justify-space-around v-if="gridView">
         <v-flex v-for="item in items" :key="item.item_id">
           <v-hover>
             <v-card
-              @click.native="getItemDetail(item.item_id)"
+              @click.native="getItemDetail(item)"
               class="mx-auto"
               color="grey lighten-4"
               min-width="260"
@@ -74,8 +84,8 @@
           class="elevation-1"
         >
           <template v-slot:items="props">
-            <td>{{ props.item.item_id }}</td>
-            <td>{{ props.item.info.title }}</td>
+            <td @click="getItemDetail(props.item)">{{ props.item.item_id }}</td>
+            <td @click="getItemDetail(props.item)">{{ props.item.info.title }}</td>
             <td>
               <v-avatar size="50" tile style="margin:5px">
                 <img :src="props.item.info.img_l" />
@@ -120,6 +130,7 @@ export default {
     return {
       gridView: true,
       dialog: false,
+      loading: false,
       userId: "",
       message: "",
       search: "",
@@ -149,9 +160,12 @@ export default {
         Snackbar.warning("请输入用户 id ");
         return null;
       }
+      this.items = [];
+      this.loading = true;
       Vue.prototype.$http
         .get("http://127.0.0.1:5000/itemcf/recoms/" + this.userId)
         .then(response => {
+          this.loading = false;
           this.items = response.data.data.recom_result;
           this.message = "获取推荐列表成功(｡ì _ í｡)";
           console.log(this.items);
@@ -166,9 +180,12 @@ export default {
         Snackbar.warning("请输入用户 id ");
         return null;
       }
+      this.items = [];
+      this.loading = true;
       Vue.prototype.$http
         .get("http://127.0.0.1:5000/usercf/recoms/" + this.userId)
         .then(response => {
+          this.loading = false;
           this.items = response.data.data.recom_result;
           this.message = "获取推荐列表成功(｡ì _ í｡)";
           console.log(this.items);
@@ -178,8 +195,8 @@ export default {
           Snackbar.error(error);
         });
     },
-    getItemDetail(id) {
-      this.$router.push({ name: "图书详情", query: { id: id } });
+    getItemDetail(item) {
+      this.$router.push({ name: "图书详情", params: { item: item } });
     },
     init() {
       this.$vuetify.theme.primary = "#429635";

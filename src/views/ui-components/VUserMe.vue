@@ -10,24 +10,21 @@
           style="background:white;width:456px;margin-left:56px;padding:34px;"
         >
           <v-avatar size="85" class="mb-3" style="margin-top:-60px">
-            <img :src="userInfo.avatar">
+            <img :src="userInfo.avatar_url">
           </v-avatar>
           <v-text-field
             class="mt-4"
             label="USERNAME"
-            :value="userInfo.name"
-            v-model="userInfo.name"
+            :value="userInfo.id"
+            v-model="userInfo.id"
           ></v-text-field>
           <v-layout>
-            <v-flex xs6>
+            <v-flex xs12>
               <v-text-field label="AGE" :value="userInfo.age" v-model="userInfo.age"></v-text-field>
             </v-flex>
-            <v-flex xs6>
-              <v-text-field label="GENDER" :value="userInfo.gender" v-model="userInfo.gender"></v-text-field>
-            </v-flex>
           </v-layout>
-          <v-text-field label="TELEPHONE" :value="userInfo.telephone" v-model="userInfo.telephone"></v-text-field>
-          <v-text-field label="AVATAR" :value="userInfo.avatar" v-model="userInfo.avatar"></v-text-field>
+          <v-text-field label="LOCATION" :value="userInfo.location" v-model="userInfo.location"></v-text-field>
+          <v-text-field label="AVATAR" :value="userInfo.avatar_url" v-model="userInfo.avatar_url"></v-text-field>
           <v-text-field
             label="ROLE"
             disabled

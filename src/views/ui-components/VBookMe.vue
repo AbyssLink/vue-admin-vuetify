@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <!-- 搜索框-搜索用户 -->
     <v-layout row justify-center>
-      <v-btn class="warning" large @click="getItemList()">获取热门图书 top200</v-btn>
-      <v-btn icon color="success" large @click="changeView">
+      <v-btn @click="searchItemList" color="info">使用物品协同过滤推荐</v-btn>
+      <v-btn @click="searchUserCFItemList" color="warning">使用用户协同过滤推荐</v-btn>
+      <v-btn icon color="success" @click="changeView">
         <v-icon color="white">cached</v-icon>
       </v-btn>
     </v-layout>
@@ -18,7 +18,7 @@
           indeterminate
         ></v-progress-circular>
       </v-layout>
-      <!-- 卡片列表-热门概览 -->
+      <!-- 卡片页-推荐结果概览 -->
       <v-layout wrap justify-space-around v-if="gridView">
         <v-flex v-for="item in items" :key="item.item_id">
           <v-hover>
@@ -55,6 +55,7 @@
           </v-hover>
         </v-flex>
       </v-layout>
+
       <!-- 列表-推荐结果概览 -->
       <v-card v-else>
         <v-card-title>
@@ -68,8 +69,8 @@
           class="elevation-1"
         >
           <template v-slot:items="props">
-            <td @click="getItemDetail(props.item)">{{ props.item.item_id }}</td>
-            <td @click="getItemDetail(props.item)">{{ props.item.info.title }}</td>
+            <td>{{ props.item.item_id }}</td>
+            <td>{{ props.item.info.title }}</td>
             <td>
               <v-avatar size="50" tile style="margin:5px">
                 <img :src="props.item.info.img_l" />
@@ -83,6 +84,25 @@
         </v-data-table>
       </v-card>
     </v-container>
+    <!-- 帮助提示框 -->
+    <v-dialog v-model="dialog" max-width="360">
+      <v-card>
+        <v-card-title class="headline green white--text">HELP</v-card-title>
+        <v-card-text class="mb-2 font-weight-light">
+          输入用户 id, 获取推荐结果
+          <br />示例1: 265889
+          <br />示例2: 275473
+          <br />示例3: 254206
+          <br />示例4: 242232
+          <br />示例5: 248718
+          <br />示例6: 242083
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat="flat" @click="dialog = false">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -96,7 +116,9 @@ export default {
       gridView: true,
       dialog: false,
       loading: false,
+      userId: "",
       message: "",
+      search: "",
       items: [],
       headers: [
         {
@@ -118,15 +140,31 @@ export default {
   },
   created: () => {},
   methods: {
-    getItemList() {
+    searchItemList() {
       this.items = [];
       this.loading = true;
       Vue.prototype.$http
-        .get("/top")
+        .get("http://127.0.0.1:5000/itemcf/recoms/" + this.userId)
         .then(response => {
           this.loading = false;
           this.items = response.data.data.recom_result;
-          this.message = "获取热门列表成功(｡ì _ í｡)";
+          this.message = "获取推荐列表成功(｡ì _ í｡)";
+          console.log(this.items);
+          Snackbar.success(this.message);
+        })
+        .catch(error => {
+          Snackbar.error(error);
+        });
+    },
+    searchUserCFItemList() {
+      this.items = [];
+      this.loading = true;
+      Vue.prototype.$http
+        .get("http://127.0.0.1:5000/usercf/recoms/" + this.userId)
+        .then(response => {
+          this.loading = false;
+          this.items = response.data.data.recom_result;
+          this.message = "获取推荐列表成功(｡ì _ í｡)";
           console.log(this.items);
           Snackbar.success(this.message);
         })
@@ -137,16 +175,21 @@ export default {
     getItemDetail(item) {
       this.$router.push({ name: "图书详情", params: { item: item } });
     },
+    init() {
+      this.$vuetify.theme.primary = "#429635";
+      this.userId = JSON.parse(localStorage.getItem("LOGIN_USER")).id;
+    },
+    helpDialog() {
+      this.dialog = true;
+    },
     changeView() {
       Snackbar.warning("列表/网格 视图已切换");
       this.gridView = !this.gridView;
-    },
-    init() {
-      this.$vuetify.theme.primary = "#429635";
     }
   },
   computed: {},
   mounted() {
+    // this.getItemList();
     this.init();
   },
   destroyed: function() {

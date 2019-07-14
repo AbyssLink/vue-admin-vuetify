@@ -51,6 +51,7 @@ import {
   VTimePicker,
   VToolbar,
   VTooltip,
+  VRating,
   transitions,
 } from 'vuetify';
 import 'vuetify/src/stylus/app.styl';
@@ -114,6 +115,7 @@ Vue.use(Vuetify, {
     VTextarea,
     VTimePicker,
     VToolbar,
+    VRating,
     VTooltip,
     transitions,
   },
