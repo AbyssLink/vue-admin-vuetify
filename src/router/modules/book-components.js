@@ -11,12 +11,6 @@ const routes = {
   },
   children: [
     {
-      path: 'top',
-      name: '热门图书',
-      component: () => import('@/views/ui-components/VBookTop.vue'),
-      meta: {},
-    },
-    {
       path: 'search',
       name: '图书搜索',
       component: () => import('@/views/ui-components/VBookSearch.vue'),

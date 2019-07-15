@@ -11,8 +11,8 @@
       <!-- Progress-bar -->
       <v-layout justify-space-around v-if="loading">
         <v-progress-circular
-          style="marginTop:100px"
-          :size="120"
+          style="marginTop:230px"
+          :size="150"
           :width="10"
           color="orange"
           indeterminate
