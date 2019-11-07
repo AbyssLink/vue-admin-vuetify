@@ -188,7 +188,7 @@ export default {
             this.myRating = "我对这本书的评分: " + response.data.data.score / 2;
             Snackbar.success(this.message);
           } else {
-            this.myRating = "还没有对它评分呢🤣, 请点击🌟按钮评分"
+            this.myRating = "还没有对它评分呢, 请点击🌟按钮评分"
           }
         })
         .catch(error => {

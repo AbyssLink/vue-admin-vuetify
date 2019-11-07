@@ -7,7 +7,7 @@
           append-icon="mic"
           class="mx-3"
           flat
-          label="输入书名"
+          label="输入书名/ID/作者/出版社"
           prepend-inner-icon="search"
           solo-inverted
           v-model="search"
