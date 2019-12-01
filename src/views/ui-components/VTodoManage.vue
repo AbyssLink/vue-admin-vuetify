@@ -99,7 +99,7 @@ export default {
       Vue.prototype.$http
         .get("/todo/list")
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "获取待办列表成功";
             this.items = [];
             for (let item of response.data.data) {
@@ -129,7 +129,7 @@ export default {
       Vue.prototype.$http
         .get("/todo/delete?id=" + this.itemInfo.id)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "删除成功, id = " + this.itemInfo.id;
             this.items.splice(this.items.indexOf(this.itemInfo), 1); //删除前端数据对应项
             Snackbar.warning(this.message);

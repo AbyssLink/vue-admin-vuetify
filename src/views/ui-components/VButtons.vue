@@ -38,7 +38,7 @@ export default {
       Vue.prototype.$http
         .post("/item/create", this.itemInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "创建商品成功";
             Snackbar.success(this.message);
           } else {

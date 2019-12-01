@@ -90,7 +90,7 @@ export default {
       Vue.prototype.$http
         .get("/user/list")
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "获取用户信息成功";
             this.items = response.data.data;
             // Snackbar.info(this.message);

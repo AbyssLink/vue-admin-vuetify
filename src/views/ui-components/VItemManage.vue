@@ -223,7 +223,7 @@ export default {
       Vue.prototype.$http
         .get("/item/list")
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "获取商品列表成功";
             this.items = response.data.data;
             // Snackbar.info(this.message);
@@ -246,7 +246,7 @@ export default {
       Vue.prototype.$http
         .post("/item/create", this.itemInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "创建商品成功";
             Snackbar.success(this.message);
             this.getItemList();
@@ -270,7 +270,7 @@ export default {
       Vue.prototype.$http
         .get("/item/delete?id=" + this.itemInfo.id)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "删除成功, id = " + this.itemInfo.id;
             this.items.splice(this.items.indexOf(this.itemInfo), 1); //删除前端数据对应项
             Snackbar.warning(this.message);
@@ -293,7 +293,7 @@ export default {
       Vue.prototype.$http
         .post("/item/edit", this.itemInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "修改商品信息成功, id=" + this.itemInfo.id;
             Snackbar.success(this.message);
           } else {

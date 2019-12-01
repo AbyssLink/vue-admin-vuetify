@@ -69,7 +69,7 @@ export default {
       Vue.prototype.$http
         .post("/user/edit", this.userInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "保存个人信息成功";
             Snackbar.success(this.message);
           } else {

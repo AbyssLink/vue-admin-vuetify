@@ -137,7 +137,7 @@ export default {
       Vue.prototype.$http
         .get("/comment/list")
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "获取订单列表成功";
             this.orders = response.data.data;
             // Snackbar.info(this.message);
@@ -161,7 +161,7 @@ export default {
       Vue.prototype.$http
         .get("/comment/delete?id=" + this.itemInfo.id)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "删除成功, id = " + this.itemInfo.id;
             this.orders.splice(this.orders.indexOf(this.itemInfo), 1); //删除前端数据对应项
             Snackbar.warning(this.message);
@@ -186,7 +186,7 @@ export default {
       Vue.prototype.$http
         .post("/comment/update", this.itemInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "更新评论成功!";
             Snackbar.success(this.message);
           } else {

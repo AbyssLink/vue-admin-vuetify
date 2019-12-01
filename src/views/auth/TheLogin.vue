@@ -79,7 +79,7 @@ export default {
       Vue.prototype.$http
         .post("/login", this.userInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             // 存储登陆信息在客户端浏览器中
             let userFullInfo = response.data.data;
             localStorage.setItem("LOGIN_USER", JSON.stringify(userFullInfo));

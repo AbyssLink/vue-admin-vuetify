@@ -128,7 +128,7 @@ export default {
       Vue.prototype.$http
         .post("/user/getotp", this.userInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "验证码为: " + response.data.data.message;
             Snackbar.success(this.message);
           } else {
@@ -152,7 +152,7 @@ export default {
       Vue.prototype.$http
         .post("/user/register", this.userInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "注册成功, 正在跳转登陆界面...";
             Snackbar.success(this.message);
             this.$router.push({ name: "Login" });

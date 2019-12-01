@@ -97,7 +97,7 @@ export default {
             JSON.parse(localStorage.getItem("LOGIN_USER")).id
         )
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "获取订单列表成功";
             this.orders = response.data.data;
             // Snackbar.info(this.message);
@@ -121,7 +121,7 @@ export default {
       Vue.prototype.$http
         .get("/order/delete?id=" + this.orderInfo.id)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "删除成功, id = " + this.orderInfo.id;
             this.orders.splice(this.orders.indexOf(this.orderInfo), 1); //删除前端数据对应项
             Snackbar.warning(this.message);

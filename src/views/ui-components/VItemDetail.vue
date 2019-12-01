@@ -209,7 +209,7 @@ export default {
       Vue.prototype.$http
         .post("/order/createorder", this.orderInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message =
               "下单成功！金额: " +
               this.itemInfo.price +
@@ -229,7 +229,7 @@ export default {
       Vue.prototype.$http
         .get("/item/get?id=" + this.itemInfo.id)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "获取商品信息成功";
             this.itemInfo = response.data.data;
             // Snackbar.info(this.message);
@@ -249,7 +249,7 @@ export default {
           "/comment/listbyitem?itemid=" + this.itemInfo.id
         )
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "获取商品评论成功";
             this.comments = response.data.data;
             // Snackbar.info(this.message);
@@ -275,7 +275,7 @@ export default {
       Vue.prototype.$http
         .post("/comment/create", this.commentInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "评论成功!" + " 可在 [我的评论] 页面中查看";
             this.getComment();
             Snackbar.success(this.message);

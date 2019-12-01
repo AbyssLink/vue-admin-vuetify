@@ -165,7 +165,7 @@ export default {
       Vue.prototype.$http
         .post("/rating/add", this.form)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "评价成功";
             Snackbar.success(this.message);
             this.getRate();
@@ -183,7 +183,7 @@ export default {
       Vue.prototype.$http
         .get("/rating/user/" + this.userId + "/" + this.item.item_id)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "获取评分成功";
             this.myRating = "我对这本书的评分: " + response.data.data.score / 2;
             Snackbar.success(this.message);

@@ -272,7 +272,7 @@ export default {
       Vue.prototype.$http
         .get("/user/list")
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "获取用户信息成功";
             this.users = response.data.data;
             // Snackbar.info(this.message);
@@ -299,7 +299,7 @@ export default {
       Vue.prototype.$http
         .get("/user/delete?id=" + this.userInfo.id)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "删除成功, id = " + this.userInfo.id;
             this.users.splice(this.users.indexOf(this.userInfo), 1); //删除前端数据对应项
             Snackbar.warning(this.message);
@@ -322,7 +322,7 @@ export default {
       Vue.prototype.$http
         .post("/user/edit", this.userInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "修改用户信息成功, id=" + this.userInfo.id;
             Snackbar.success(this.message);
           } else {
@@ -340,7 +340,7 @@ export default {
       Vue.prototype.$http
         .post("/user/getotp", this.userInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "otp已发送";
             Snackbar.success(this.message);
           } else {
@@ -358,7 +358,7 @@ export default {
       Vue.prototype.$http
         .post("/user/register", this.userInfo)
         .then(response => {
-          if (response.data.status == "success") {
+          if (response.data.ok == true) {
             this.message = "新增用户成功";
             Snackbar.success(this.message);
           } else {
